@@ -1,6 +1,15 @@
 use image::{DynamicImage, GenericImage, GenericImageView, Rgba};
 use crate::palettes::GRAY8;
 
+/* TODO:
+    - Create variable amount of color bands
+    - Increase performance by ordering grayscale colors by "size",
+        only search until palette value bigger than average is found
+        -> only have to search half the array on average
+*/
+
+
+
 pub fn process_gray8(img: &mut DynamicImage) -> DynamicImage {
     println!("\x1b[32;1mConverting to 8Bit grayscale \x1b[0m\n");
     let (width, height) = img.dimensions();
@@ -16,15 +25,16 @@ pub fn process_gray8(img: &mut DynamicImage) -> DynamicImage {
             let mut min_diff = u8::MAX;
 
             for p in GRAY8 {
-                let mut diff :u8 = 0;
                 if p > average {
-                    diff = p - average;
+                    if (p - average) < min_diff {
+                        min_diff = p - average;
+                        best = p;
+                    }
                 } else {
-                    diff = average - p;
-                }
-                if diff < min_diff {
-                    min_diff = diff;
-                    best = p;
+                    if (average - p) < min_diff {
+                        min_diff = average - p;
+                        best = p;
+                    }
                 }
             }
             img.put_pixel(x, y, Rgba([best, best, best, 0xFF]));
@@ -48,9 +58,4 @@ pub fn process_gray(img: &mut DynamicImage) -> DynamicImage {
         }
     }
     img.clone()
-}
-
-pub fn process_gameboy(img: &image::DynamicImage) -> DynamicImage {
-    println!("processing gameboy\n");
-    img.grayscale()
 }

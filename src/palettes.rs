@@ -1,5 +1,17 @@
-use image::Rgb;
+//use image::Rgb;
 
+pub const GRAY8: [u8; 8] = [
+    0x00,
+    0x48,
+    0x6C,
+    0x90,
+    0xB4,
+    0xD8,
+    0xFC,
+    0xFF
+];
+
+/*
 pub const GRUVBOX: [Rgb<u8>; 27] = [
     // dark base
     Rgb([0x1d, 0x20, 0x21]), // bg0_h
@@ -34,14 +46,4 @@ pub const GRUVBOX: [Rgb<u8>; 27] = [
     Rgb([0xd6, 0x5d, 0x0e]), // orange
     Rgb([0xfe, 0x80, 0x19]), // bright_orange
 ];
-
-pub const GRAY8: [u8; 8] = [
-    0x00,
-    0x48,
-    0x6C,
-    0x90,
-    0xB4,
-    0xD8,
-    0xFC,
-    0xFF
-];
+*/
