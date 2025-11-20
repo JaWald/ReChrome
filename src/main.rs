@@ -7,6 +7,7 @@ use cli::Args;
 use cli::print_selection;
 
 fn main() {
+    // ------------------------------------------ INPUT -------------------------------------------
     let args = Args::parse();
 
     // checks if image exists
@@ -25,13 +26,18 @@ fn main() {
     };
     print_selection(&args);
 
+    // ---------------------------------------- PROCESSING ----------------------------------------
+    
     let mut img = image::open(&args.input).expect("failed to open input image");
-
+    println!(" Converting to:  \x1b[33;1m{}\x1b[0m", args.palette.as_str());
     let processed = match args.palette.as_str() {
         "gray" => processor::process_gray(&mut img),
-        "gray8" => processor::process_gray8(&mut img),
+        "gruvbox" => processor::process_gruvbox(&mut img),
         _ => panic!("Unknown palette: {}", args.palette),
     };
-
     processed.save(output).expect("failed to save image");
+    println!(" Image saved at: {:?}", output);
+    println!("--------------------------------------------------------------------");
+    
+    // --------------------------------------------------------------------------------------------
 }

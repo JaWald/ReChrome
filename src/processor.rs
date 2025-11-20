@@ -1,61 +1,44 @@
 use image::{DynamicImage, GenericImage, GenericImageView, Rgba};
-use crate::palettes::GRAY8;
+use crate::palettes::GRUVBOX;
 
-/* TODO:
-    - Create variable amount of color bands
-    - Increase performance by ordering grayscale colors by "size",
-        only search until palette value bigger than average is found
-        -> only have to search half the array on average
-*/
+pub const BT709 :[f32; 3] = [0.2126, 0.7152, 0.0722]; // see ITU-R BT.709
 
-
-
-pub fn process_gray8(img: &mut DynamicImage) -> DynamicImage {
-    println!("\x1b[32;1mConverting to 8Bit grayscale \x1b[0m\n");
+pub fn process_gray(img: &mut DynamicImage) -> &mut DynamicImage {
     let (width, height) = img.dimensions();
     for x in 0..width {
         for y in 0..height {
-            let px = img.get_pixel(x, y).0;
-            let r = px[0];
-            let g = px[1];
-            let b = px[2];
-
-            let average = r/3 + g/3 + b/3;
-            let mut best = GRAY8[0];
-            let mut min_diff = u8::MAX;
-
-            for p in GRAY8 {
-                if p > average {
-                    if (p - average) < min_diff {
-                        min_diff = p - average;
-                        best = p;
-                    }
-                } else {
-                    if (average - p) < min_diff {
-                        min_diff = average - p;
-                        best = p;
-                    }
-                }
-            }
-            img.put_pixel(x, y, Rgba([best, best, best, 0xFF]));
-        }
-    }
-    img.clone()
-}
-
-pub fn process_gray(img: &mut DynamicImage) -> DynamicImage {
-    println!("\x1b[32;1mConverting to grayscale \x1b[0m\n");
-    let (width, height) = img.dimensions();
-    for x in 0..width {
-        for y in 0..height {
-            let px = img.get_pixel(x, y).0;
-            let r = px[0];
-            let g = px[1];
-            let b = px[2];
-
-            let average = r/3 + g/3 + b/3;
+            let pix = img.get_pixel(x, y).0;
+            let r = pix[0] as f32 * BT709[0];
+            let g = pix[1] as f32 * BT709[1];
+            let b = pix[2] as f32 * BT709[2];
+            let average = (r + g + b) as u8;
             img.put_pixel(x, y, Rgba([average, average, average, 0xFF]));
         }
     }
-    img.clone()
+    img
+}
+
+pub fn process_gruvbox(img: &mut DynamicImage) -> &mut DynamicImage {
+    let (width, height) = img.dimensions();
+    for x in 0..width {
+        for y in 0..height {
+            let pix = img.get_pixel(x, y);
+
+            let mut min_diff = f32::MAX;
+            let mut best = GRUVBOX[0];
+            for pal in GRUVBOX {
+                let dr = pix[0] as f32 - pal[0] as f32;
+                let dg = pix[1] as f32 - pal[1] as f32;
+                let db = pix[2] as f32 - pal[2] as f32;
+                let diff = dr * dr + dg * dg + db * db;
+
+                if diff < min_diff {
+                    best = pal;
+                    min_diff = diff;
+                }
+            }
+            img.put_pixel(x, y, Rgba([best[0], best[1], best[2], 0xFF]));
+        }
+    }
+    img
 }
