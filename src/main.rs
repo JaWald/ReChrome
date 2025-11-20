@@ -20,11 +20,11 @@ fn main() {
         Some(path) => path,
         None => &{
             let mut path = args.input.clone();
-            path.set_file_name(format!("{}_ReChrome.png", path.file_stem().unwrap().to_string_lossy()));
+            path.set_file_name(format!("{}_{}.png", path.file_stem().unwrap().to_string_lossy(), args.palette));
             path
         }
     };
-    print_selection(&args);
+    print_selection(&args, output);
 
     // ---------------------------------------- PROCESSING ----------------------------------------
     
