@@ -1,9 +1,8 @@
 use image::{DynamicImage, GenericImage, GenericImageView, Rgba};
-use crate::palettes::GRUVBOX;
 
 pub const BT709 :[f32; 3] = [0.2126, 0.7152, 0.0722]; // see ITU-R BT.709
 
-pub fn process_gray(img: &mut DynamicImage) -> &mut DynamicImage {
+pub fn process_gray(mut img: DynamicImage) -> DynamicImage {
     let (width, height) = img.dimensions();
     for x in 0..width {
         for y in 0..height {
@@ -18,22 +17,22 @@ pub fn process_gray(img: &mut DynamicImage) -> &mut DynamicImage {
     img
 }
 
-pub fn process_gruvbox(img: &mut DynamicImage) -> &mut DynamicImage {
+pub fn process_image(mut img: DynamicImage, palette: &[[u8; 3]]) -> DynamicImage {
     let (width, height) = img.dimensions();
     for x in 0..width {
         for y in 0..height {
             let pix = img.get_pixel(x, y);
 
             let mut min_diff = f32::MAX;
-            let mut best = GRUVBOX[0];
-            for pal in GRUVBOX {
+            let mut best = palette[0];
+            for pal in palette {
                 let dr = pix[0] as f32 - pal[0] as f32;
                 let dg = pix[1] as f32 - pal[1] as f32;
                 let db = pix[2] as f32 - pal[2] as f32;
                 let diff = dr * dr + dg * dg + db * db;
 
                 if diff < min_diff {
-                    best = pal;
+                    best = *pal;
                     min_diff = diff;
                 }
             }
