@@ -9,10 +9,25 @@ pub struct Args {
     pub input: PathBuf,
 
     /// Color palette
-    #[arg(short, long, help="Available: \n   > Gruvbox\n   > Gameboy")]
+    #[arg(short, long, help="Available: \n   \x1b[33;1m> gray\n   > gruvbox \x1b[37;0m")]
     pub palette: String,
 
     /// Output file path (optional)
     #[arg(short, long)]
     pub output: Option<PathBuf>,
+}
+
+pub fn print_selection(args: &Args){
+    println!("\n--------------------------------------------------------------------");
+    println!(" \x1b[1mYour selection: \x1b[0m");
+    println!("   \x1b[32;1mPalette:\x1b[0m  \x1b[1m{}\x1b[0m", args.palette);
+    println!("   \x1b[32;1mInput:\x1b[0m    {}", args.input.to_str().unwrap());
+    if &args.output == &None {
+        let mut path = args.input.clone();
+        path.set_file_name(format!("{}_ReChrome.png", path.file_stem().unwrap().to_string_lossy()));
+        println!("   \x1b[32;1mOutput:\x1b[0m   {} (auto)", path.display());
+    } else {
+        println!("   \x1b[32;1mOutput:\x1b[0m   {}", args.output.clone().unwrap().to_str().unwrap());
+    }
+    println!("--------------------------------------------------------------------");
 }
