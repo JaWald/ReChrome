@@ -1,0 +1,71 @@
+// dark mode
+282828
+cc241d
+98971a
+d79921
+458588
+b16286
+689d6a
+a89984
+
+928374
+fb4934
+b8bb26
+fabd2f
+83a598
+d3869b
+8ec07c
+ebdbb2
+
+1d2021
+//282828 duplicate
+3c3836
+504945
+665c54
+7c6f64
+//928374 duplicate
+d65d0e
+
+32302f
+//a89984 duplicate
+bdae93
+d5c4a1
+//ebdbb2 duplicate
+fbf1c7
+fe8019
+
+// light mode
+//fbf1c7 duplicate
+//cc241d duplicate
+//98971a duplicate
+//d79921 duplicate
+//458588 duplicate
+//b16286 duplicate
+//689d6a duplicate
+//7c6f64 duplicate
+
+//928374 duplicate
+9d0006
+797a0e
+b57614
+076678
+8f3f71
+427b58
+//3c3836 duplicate
+
+f9f5d7
+//fbf1c7 duplicate
+//ebdbb2 duplicate
+//d5c4a1 duplicate
+//bdae93 duplicate
+//a89984 duplicate
+//928374 duplicate
+//d65d0e duplicate
+
+f2e5bc
+//7c6f64 duplicate
+//665c54 duplicate
+//504945 duplicate
+//3c3836 duplicate
+//282828 duplicate
+af3a03
