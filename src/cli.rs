@@ -1,4 +1,5 @@
 use std::path::PathBuf;
+use std::time::Duration;
 use clap::Parser;
 
 #[derive(Parser, Debug)]
@@ -15,15 +16,6 @@ pub struct Args {
     /// Output file path (optional)
     #[arg(short, long)]
     pub output: Option<PathBuf>,
-}
-
-pub fn print_selection(args: &Args, output: &PathBuf) {
-    println!("\n-----------------------------------------------------------------");
-    println!(" \x1b[1mYour selection: \x1b[0m");
-    println!("   \x1b[32;1mPalette:\x1b[0m  \x1b[1m{}\x1b[0m", args.palette);
-    println!("   \x1b[32;1mInput:\x1b[0m    {}", args.input.to_str().unwrap());
-    println!("   \x1b[32;1mOutput:\x1b[0m   {}", output.to_str().unwrap());
-    println!("-----------------------------------------------------------------");
 }
 
 // checks whether image even exists
@@ -44,4 +36,24 @@ pub fn validate_output(args: &Args) -> PathBuf{
             path
         }
     }
+}
+
+pub fn print_selection(args: &Args, output: &PathBuf) {
+    println!("\n-----------------------------------------------------------------");
+    println!(" \x1b[1mYour selection: \x1b[0m");
+    println!("   \x1b[32;1mPalette:\x1b[0m  \x1b[1m{}\x1b[0m", args.palette);
+    println!("   \x1b[32;1mInput:\x1b[0m    {}", args.input.to_str().unwrap());
+    println!("   \x1b[32;1mOutput:\x1b[0m   {}", output.to_str().unwrap());
+    println!("-----------------------------------------------------------------");
+}
+
+pub fn print_measurements(input: Duration, load: Duration, proc: Duration, save: Duration) {
+    println!("-----------------------------------------------------------------");
+    println!(" \x1b[1mMeasurements:\x1b[0m");
+    println!("   \x1b[33;1mInput:\x1b[0m   {:>8.1?}", input);
+    println!("   \x1b[33;1mLoad:\x1b[0m    {:>8.1?}", load);
+    println!("   \x1b[33;1mProcess:\x1b[0m {:>8.1?}", proc);
+    println!("   \x1b[33;1mSave:\x1b[0m    {:>8.1?}", save);
+    println!("   \x1b[32;1mTotal:\x1b[0m \x1b[1m  {:>8.1?}\x1b[0m", input + load + proc + save);
+    println!("-----------------------------------------------------------------");
 }

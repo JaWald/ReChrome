@@ -19,8 +19,7 @@ fn main() {
     let end_input = SystemTime::now();
     let dur_input = end_input.duration_since(start_input).expect("Input time should have been measured");
 
-    // ---------------------------------------- PROCESSING ----------------------------------------
-
+    // ------------------------------------------- LOAD -------------------------------------------
     let start_load = SystemTime::now();
 
     let img = image::open(&args.input).expect("failed to open input image");
@@ -30,6 +29,7 @@ fn main() {
     let end_load = SystemTime::now();
     let dur_load = end_load.duration_since(start_load).expect("Load time should have been measured");
 
+    // ------------------------------------------ PROCESS ------------------------------------------
     println!(" Converting to:  \x1b[33;1m{}\x1b[0m", args.palette.as_str());
 
     let start_proc = SystemTime::now();
@@ -43,6 +43,8 @@ fn main() {
 
     let end_proc = SystemTime::now();
     let dur_proc = end_proc.duration_since(start_proc).expect("Proc time should have been measured");
+
+    // ------------------------------------------- SAVE -------------------------------------------
     let start_save = SystemTime::now();
 
     processed.save(&output).expect("failed to save image");
@@ -50,15 +52,6 @@ fn main() {
     let end_save = SystemTime::now();
     let dur_save = end_save.duration_since(start_save).expect("Save time should have been measured");
 
-    println!(" Image saved at: {}", &output.to_str().unwrap());
-    println!("-----------------------------------------------------------------");
-    println!(" \x1b[33;1mInput:\x1b[0m    {:?}", dur_input);
-    println!(" \x1b[33;1mLoad:\x1b[0m     {:?}", dur_load);
-    println!(" \x1b[33;1mProcess:\x1b[0m  {:?}", dur_proc);
-    println!(" \x1b[33;1mSave:\x1b[0m     {:?}", dur_save);
-    println!("--------------------------");
-    println!("   \x1b[32;1mTotal:\x1b[0m    {:?}", dur_input + dur_load + dur_proc + dur_save);
-    println!("-----------------------------------------------------------------");
-    
+    print_measurements(dur_input, dur_load, dur_proc, dur_save);
     // --------------------------------------------------------------------------------------------
 }
