@@ -35,9 +35,13 @@ fn main() {
     let start_proc = SystemTime::now();
 
     let processed = match args.palette.as_str() {
-        "gray" => processor::process_gray(buf),
-        "gruvbox" => process_image(buf, &*get_palette(pal_path.as_str())),
-        "everforest" => process_image(buf, &*get_palette(pal_path.as_str())),
+        "gray"          => process_gray(buf),
+        "gruvbox"       => process_image(buf, &*get_palette(pal_path.as_str())),
+        "everforest"    => process_image(buf, &*get_palette(pal_path.as_str())),
+        "kanagawa"      => process_image(buf, &*get_palette(pal_path.as_str())),
+        "solarized"     => process_image(buf, &*get_palette(pal_path.as_str())),
+        "molokai"       => process_image(buf, &*get_palette(pal_path.as_str())),
+        "papercut"      => process_image(buf, &*get_palette(pal_path.as_str())),
         _ => panic!("Unrecognized palette: {}", args.palette),
     };
 
