@@ -8,7 +8,7 @@ pub fn process_gray(mut buf: RgbaImage) -> DynamicImage {
         let g = pix[1] as f32 * BT709[1];
         let b = pix[2] as f32 * BT709[2];
         let average = (r + g + b) as u8;
-        *pix = Rgba([average, average, average, 0xFF]);
+        *pix = Rgba([average, average, average, pix.0[3]]);
     }
     DynamicImage::ImageRgba8(buf)
 }
@@ -34,7 +34,7 @@ pub fn process_image(mut buf: RgbaImage, palette: &[[u8; 3]]) -> DynamicImage {
     DynamicImage::ImageRgba8(buf)
 }
 
-pub fn get_palette(str: &str) -> Vec<[u8; 3]> {
+pub fn get_palette(str: String) -> Vec<[u8; 3]> {
     let content = std::fs::read_to_string(str).expect("Should have been able to read file");
 
     let mut palette = Vec::new();
