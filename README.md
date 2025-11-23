@@ -1,13 +1,37 @@
 # ReChrome
 
-ReChrome is a CLI tool written in Rust that recolors input images using different color palettes.  
-The main inspiration came from [gruvbox-factory](https://github.com/paulopacitti/gruvbox-factory#gruvbox-factory-).
+ReChrome is a CLI that recolors images based on predefined palettes.
+
+## Currently available palettes:
+- [everforest](https://github.com/sainnhe/everforest/blob/master/palette.md9)
+- gray
+- [gruvbox](https://github.com/morhetz/gruvbox)
+- [kanagawa](https://github.com/rebelot/kanagawa.nvim)
+- [molokai](https://github.com/UtkarshVerma/molokai.nvim)
+- [papercut](https://github.com/NLKNguyen/papercolor-theme)
+- [solarized](https://github.com/solarized/xresources)
 
 ## Planned Features
-- Recoloring using predefined color palettes
-- File type conversion (JPG/PNG)
-- Basic image filters (blur, convolution, etc.)
+Dithering:
+- Bayes
+- Floyd-Steinberg
 
-## Used Tech
-- clap crate
-- image crate
+## Usage
+```
+Usage: rechrome.exe [OPTIONS] --palette <PALETTE> --input <INPUT>
+
+Options:
+  -p, --palette <PALETTE>  Available: 
+                              > everforest    > gray
+                              > gruvbox       > kanagawa
+                              > molokai       > papercut
+                              > solarized 
+  -i, --input <INPUT>      Input  file path
+  -o, --output <OUTPUT>    Output file path (optional)
+                           
+  -s, --showcase <SIZE>    Show preview (optional, recommended < 50)
+  -r, --runtime            Show timing measurements
+                           
+  -h, --help               Print help
+  -V, --version            Print version
+```
