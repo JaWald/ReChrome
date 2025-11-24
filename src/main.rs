@@ -6,6 +6,7 @@ use clap::Parser;
 use cli::Args;
 use processor::*;
 use cli::*;
+use cli::Palette::*;
 
 fn main() {
     // ------------------------------------------ INPUT -------------------------------------------
@@ -22,19 +23,18 @@ fn main() {
 
     // ------------------------------------------ PROCESS ------------------------------------------
     let start_proc = SystemTime::now();
-
-    let pal_path = format!("palettes/{}.txt", args.palette.as_str());
+    let dither = args.dither.unwrap_or_else(|| Dither::None);
+    let pal_path = format!("palettes/{:?}.txt", args.palette);
     let palette = get_palette(pal_path);
     let buf = img.into_rgba8();
-    let processed = match args.palette.as_str() {
-        "gray"          => process_gray(buf),
-        "gruvbox"       => process_image(buf, &palette),
-        "everforest"    => process_image(buf, &palette),
-        "kanagawa"      => process_image(buf, &palette),
-        "solarized"     => process_image(buf, &palette),
-        "molokai"       => process_image(buf, &palette),
-        "papercut"      => process_image(buf, &palette),
-        _ => panic!("Unrecognized palette: {}", args.palette),
+    let processed = match args.palette {
+        Gray        => process_gray(buf),
+        Gruvbox     => process_image(buf, palette, dither),
+        Everforest  => process_image(buf, palette, dither),
+        Kanagawa    => process_image(buf, palette, dither),
+        Solarized   => process_image(buf, palette, dither),
+        Molokai     => process_image(buf, palette, dither),
+        Papercut    => process_image(buf, palette, dither),
     };
     let end_proc = SystemTime::now();
     let dur_proc = end_proc.duration_since(start_proc).unwrap();

@@ -1,20 +1,12 @@
 use std::cmp::max;
 use std::path::PathBuf;
 use std::time::Duration;
-use clap::Parser;
+use clap::{Parser, ValueEnum};
 use image::{DynamicImage, GenericImageView};
 
 #[derive(Parser, Debug)]
 #[command(version="0.0.1", about, long_about = None)]
 pub struct Args {
-    /// Color palette
-    #[arg(short, long,  help = "Available:\x1b[33;1m \
-    \n   > everforest    > gray\
-    \n   > gruvbox       > kanagawa\
-    \n   > molokai       > papercut\
-    \n   > solarized \x1b[37;0m")]
-    pub palette: String,
-
     /// Input  file path
     #[arg(short, long)]
     pub input: PathBuf,
@@ -23,13 +15,38 @@ pub struct Args {
     #[arg(short, long, help = "Output file path (optional)\n")]
     pub output: Option<PathBuf>,
 
-    /// Show preview (optional, recommended < 50)
+    /// Color palette
+    #[arg(short, long, value_enum, help = "Palettes:\n")]
+    pub palette: Palette,
+
+    /// Dithering Modes
+    #[arg(short, long, value_enum, help = "Dithering Modes:\n")]
+    pub dither: Option<Dither>,
+
+    /// Show preview (optional, recommended < 40)
     #[arg(short = 's', long = "showcase")]
     pub size: Option<u32>,
 
     /// Show runtime
     #[arg(short = 'r', long, help = "Show timing measurements\n")]
     pub runtime: bool,
+}
+
+#[derive(Debug, Clone, ValueEnum)]
+pub enum Palette {
+    Gray,
+    Gruvbox,
+    Everforest,
+    Kanagawa,
+    Molokai,
+    Papercut,
+    Solarized
+}
+
+#[derive(Debug, Clone, ValueEnum, Copy)]
+pub enum Dither {
+    None,
+    Bayer8
 }
 
 // checks whether image even exists
@@ -42,14 +59,18 @@ pub fn validate_input(args: &Args) {
 
 // checks existence of output path, clones input path with new file name if necessary
 pub fn validate_output(args: &Args) -> PathBuf{
-    match &args.output {
+  match &args.output {
         Some(path) => path.to_path_buf(),
         None => {
             let mut path = args.input.clone();
-            path.set_file_name(format!("{}_{}.png", path.file_stem().unwrap().to_string_lossy(), args.palette));
+            match &args.dither {
+                Some(..) => {path.set_file_name(format!("{}_{:?}_{:?}.png", path.file_stem().unwrap().to_string_lossy(), args.palette, args.dither.unwrap())); }
+                _ => {path.set_file_name(format!("{}_{:?}.png", path.file_stem().unwrap().to_string_lossy(), args.palette)); }
+            }
             path
         }
     }
+
 }
 
 pub fn print_dashes(show: &Option<u32>) {
@@ -67,7 +88,7 @@ pub fn print_dashes(show: &Option<u32>) {
 pub fn print_selection(args: &Args, output: &PathBuf) {
     print_dashes(&args.size);
     println!(" \x1b[1mSelection: \x1b[0m");
-    println!("   \x1b[32;1mPalette:\x1b[0m  \x1b[1m{}\x1b[0m", args.palette);
+    println!("   \x1b[32;1mPalette:\x1b[0m  \x1b[1m{:?}\x1b[0m", args.palette);
     println!("   \x1b[33;1mInput:\x1b[0m    {}", args.input.to_str().unwrap());
     println!("   \x1b[33;1mOutput:\x1b[0m   {}", output.to_str().unwrap());
     if args.size.is_some(){
