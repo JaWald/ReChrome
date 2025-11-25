@@ -1,13 +1,14 @@
 # ReChrome
+ReChrome is a command-line tool that recolors images using predefined color palettes.
+It applies Bayer ordered dithering to reduce banding, then maps each pixel to the nearest color in the selected palette and saves the result.
 
-ReChrome is a CLI that recolors images based on predefined palettes, using Bayer ordered dithering to smooth out the color bands.
-
-## Install
-Unfortunately, the binary might be flagged by Windows Defender as a Virus\
-To circumvent this, please follow these steps:
-- Create a folder in a root directive
-- Exclude said folder from Windows Defender
-- Unzip ReChrome to that folder
+It loads an image from the specified input path, applies dithering, performs palette quantization, and writes the processed output file in the desired format.
+## Palettes
+|[Original](https://unsplash.com/de/fotos/ein-schwarzer-hintergrund-mit-einem-rosa-und-blauen-design-L8fXJgMk5jc)|[Everforest](https://github.com/sainnhe/everforest/blob/master/palette.md9)|[Gruvbox](https://github.com/morhetz/gruvbox)|[Kanagawa](https://github.com/rebelot/kanagawa.nvim)|
+|:--:|                                 :---:                                     |                    :---:                    |                      :---:                         |
+|<img src="images/color.jpg" width="300" alt="Original">|<img src="images/color_everforest_bayer16-64.jpg" width="300" alt="Everforest">|<img src="images/color_gruvbox_bayer16-64.jpg" width="300" alt="Gruvbox">|<img src="images/color_kanagawa_bayer16-64.jpg" width="300" alt="Kanagawa">|
+||[Molokai](https://github.com/UtkarshVerma/molokai.nvim)|[Papercut](https://github.com/NLKNguyen/papercolor-theme)|[Solarized](https://github.com/solarized/xresources)|
+||<img src="images/color_molokai_bayer16-64.jpg" width="300" alt="Molokai">|<img src="images/color_papercut_bayer16-64.jpg" width="300" alt="Papercut">|<img src="images/color_solarized_bayer16-64.jpg" width="300" alt="Solarized">|
 
 ## Help
 ```c++
@@ -40,14 +41,11 @@ Manual dithering (watercolor effect)\
 
 In all these examples, ReChrome saves the image to the input directory, appending palette and dithering parameter to the file name.
 
-## Palettes
+## Install
+Download the most recent release under the "Releases" Section on the right hand side, then unzip it and use it in your terminal
 
-| [Original](https://unsplash.com/de/fotos/ein-schwarzer-hintergrund-mit-einem-rosa-und-blauen-design-L8fXJgMk5jc) |
-| :---: |
-| <img src="images/color.jpg" width="400" alt="Original"> |
-
-| Palette | Photo | Palette | Photo |
-|:---:|:---:|:---:|:---:|
-|[Everforest](https://github.com/sainnhe/everforest/blob/master/palette.md9)| <img src="images/color_everforest_bayer16-64.jpg" width="400" alt="Everforest"> |[Molokai](https://github.com/UtkarshVerma/molokai.nvim)| <img src="images/color_molokai_bayer16-64.jpg" width="400" alt="Molokai"> |
-|[Gruvbox](https://github.com/morhetz/gruvbox)| <img src="images/color_gruvbox_bayer16-64.jpg" width="400" alt="Gruvbox"> |[Papercut](https://github.com/NLKNguyen/papercolor-theme)| <img src="images/color_papercut_bayer16-64.jpg" width="400" alt="Papercut"> |
-|[Kanagawa](https://github.com/rebelot/kanagawa.nvim)| <img src="images/color_kanagawa_bayer16-64.jpg" width="400" alt="Kanagawa"> |[Solarized](https://github.com/solarized/xresources)| <img src="images/color_solarized_bayer16-64.jpg" width="400" alt="Solarized"> |
+Unfortunately, the binary might be flagged by Windows Defender as a Virus\
+To circumvent this, please follow these steps:
+- Create a folder in a root directive
+- Exclude said folder from Windows Defender
+- Unzip ReChrome to that folder
