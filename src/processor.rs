@@ -1,5 +1,6 @@
 use image::{DynamicImage, Rgba, RgbaImage};
-use crate::cli::{Dither};
+use crate::cli::{Dither, Palette};
+use crate::palettes::*;
 
 // see ITU-R BT.709
 const BT709 :[f32; 3] = [0.2126, 0.7152, 0.0722];
@@ -92,16 +93,35 @@ pub fn process_image(mut buf: RgbaImage, palette: Vec<[u8; 3]>, dither: Dither, 
     DynamicImage::ImageRgba8(buf)
 }
 
-pub fn get_palette(str: String) -> Vec<[u8; 3]> {
+pub fn get_palette(palette: &Palette) -> &[[u8; 3]] {
+    let pal = match palette {
+        Palette::Everforest => EVERFOREST,
+        Palette::Gruvbox => GRUVBOX,
+        Palette::Kanagawa => KANAGAWA,
+        Palette::Molokai => MOLOKAI,
+        Palette::Papercut => PAPERCUT,
+        Palette::Solarized => SOLARIZED,
+        Palette::Gray => &[[0, 0, 0]],
+    };
+    pal
+}
+
+/* for dev
+pub fn print_palette(str: &String) {
     let content = std::fs::read_to_string(str).expect("Should have been able to read file");
 
-    let mut palette = Vec::new();
+    let mut count = 0;
     for l in content.lines() {
         if l.starts_with("//") || l.is_empty() { continue }
         let r = u8::from_str_radix(&l[0..2], 16).expect("Should have been able to parse red");
         let g = u8::from_str_radix(&l[2..4], 16).expect("Should have been able to parse green");
         let b = u8::from_str_radix(&l[4..6], 16).expect("Should have been able to parse blue");
-        palette.push([r, g, b]);
+        print!("[{:>3}, {:>3}, {:>3}], ", r, g, b);
+        if count % 4 == 3 {
+            println!();
+        }
+        count += 1;
     }
-    palette
+    println!();
 }
+*/
