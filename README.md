@@ -1,17 +1,6 @@
 # ReChrome
 
 ReChrome is a CLI that recolors images based on predefined palettes, using Bayer ordered dithering to smooth out the color bands.
-Currently, the following palettes are available:
-
-![color_gruvbox_bayer16-64]
-
-
-- [everforest](https://github.com/sainnhe/everforest/blob/master/palette.md9)
-- [gruvbox](https://github.com/morhetz/gruvbox)
-- [kanagawa](https://github.com/rebelot/kanagawa.nvim)
-- [molokai](https://github.com/UtkarshVerma/molokai.nvim)
-- [papercut](https://github.com/NLKNguyen/papercolor-theme)
-- [solarized](https://github.com/solarized/xresources)
 
 ## Install
 Unfortunately, the binary might be flagged by Windows Defender as a Virus\
@@ -50,3 +39,15 @@ Manual dithering (watercolor effect)\
 ` <correctDir>.\rechrome.exe -i "C:\Users\<user>\Downloads\flower.jpeg" -p kanagawa -d bayer2 -b 128`
 
 In all these examples, ReChrome saves the image to the input directory, appending palette and dithering parameter to the file name.
+
+## Palettes
+
+| [Original](https://unsplash.com/de/fotos/ein-schwarzer-hintergrund-mit-einem-rosa-und-blauen-design-L8fXJgMk5jc) |
+| :---: |
+| <img src="images/color.jpg" width="400" alt="Original"> |
+
+| Palette | Photo | Palette | Photo |
+|:---:|:---:|:---:|:---:|
+|[Everforest](https://github.com/sainnhe/everforest/blob/master/palette.md9)| <img src="images/color_everforest_bayer16-64.jpg" width="400" alt="Everforest"> |[Molokai](https://github.com/UtkarshVerma/molokai.nvim)| <img src="images/color_molokai_bayer16-64.jpg" width="400" alt="Molokai"> |
+|[Gruvbox](https://github.com/morhetz/gruvbox)| <img src="images/color_gruvbox_bayer16-64.jpg" width="400" alt="Gruvbox"> |[Papercut](https://github.com/NLKNguyen/papercolor-theme)| <img src="images/color_papercut_bayer16-64.jpg" width="400" alt="Papercut"> |
+|[Kanagawa](https://github.com/rebelot/kanagawa.nvim)| <img src="images/color_kanagawa_bayer16-64.jpg" width="400" alt="Kanagawa"> |[Solarized](https://github.com/solarized/xresources)| <img src="images/color_solarized_bayer16-64.jpg" width="400" alt="Solarized"> |
