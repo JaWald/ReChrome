@@ -1,6 +1,17 @@
 use image::{DynamicImage, Rgba, RgbaImage};
+use crate::cli::{Dither};
 
-pub const BT709 :[f32; 3] = [0.2126, 0.7152, 0.0722]; // see ITU-R BT.709
+const BT709 :[f32; 3] = [0.2126, 0.7152, 0.0722]; // see ITU-R BT.709
+
+const BAYER8: [[u8; 8]; 8] =
+    [[0, 32, 8, 40, 2, 34, 10, 42],
+    [48, 16, 56, 24, 50, 18, 58, 26],
+    [12, 44, 4, 36, 14, 46, 6, 38],
+    [60, 28, 52, 20, 62, 30, 54, 22],
+    [3, 35, 11, 43, 1, 33, 9, 41],
+    [51, 19, 59, 27, 49, 17, 57, 25],
+    [15, 47, 7, 39, 13, 45, 5, 37],
+    [63, 31, 55, 23, 61, 29, 53, 21]];
 
 pub fn process_gray(mut buf: RgbaImage) -> DynamicImage {
     for pix in buf.pixels_mut() {
@@ -13,18 +24,37 @@ pub fn process_gray(mut buf: RgbaImage) -> DynamicImage {
     DynamicImage::ImageRgba8(buf)
 }
 
-pub fn process_image(mut buf: RgbaImage, palette: &[[u8; 3]]) -> DynamicImage {
-    for pix in buf.pixels_mut() {
+/* TODO
+ - Floyd Steinberg
+ - Bayer 8x8
+ - Bayer 16x16
+ - Atkinson
+
+ dithering occurs before process_color, as it must create the noise beforehand
+ iterate over each pixel, get RGB value, check bayer matrix and add/subtract given value
+*/
+
+pub fn process_image(mut buf: RgbaImage, palette: Vec<[u8; 3]>, dither: Dither) -> DynamicImage {
+    for (x, y, pix) in buf.enumerate_pixels_mut() {
+        let dither_shift = match dither {
+            Dither::None => 0.0,
+            Dither::Bayer8 => BAYER8[(y % 8) as usize][(x % 8) as usize] as f32 - 31.5,
+        };
+
+        let r = (pix[0] as f32 + dither_shift).clamp(0.0, 255.0);
+        let g = (pix[1] as f32 + dither_shift).clamp(0.0, 255.0);
+        let b = (pix[2] as f32 + dither_shift).clamp(0.0, 255.0);
+
         let mut min_diff = f32::MAX;
-        let mut best = &palette[0];
-        for pal in palette {
-            let dr = pix[0] as f32 - pal[0] as f32;
-            let dg = pix[1] as f32 - pal[1] as f32;
-            let db = pix[2] as f32 - pal[2] as f32;
+        let mut best = palette[0];
+        for pal in &palette {
+            let dr = r - pal[0] as f32;
+            let dg = g - pal[1] as f32;
+            let db = b - pal[2] as f32;
             let diff = dr * dr + dg * dg + db * db;
 
             if diff < min_diff {
-                best = &pal;
+                best = *pal;
                 min_diff = diff;
 
             }
