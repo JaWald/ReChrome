@@ -24,16 +24,6 @@ pub fn process_gray(mut buf: RgbaImage) -> DynamicImage {
     DynamicImage::ImageRgba8(buf)
 }
 
-/* TODO
- - Floyd Steinberg
- - Bayer 8x8
- - Bayer 16x16
- - Atkinson
-
- dithering occurs before process_color, as it must create the noise beforehand
- iterate over each pixel, get RGB value, check bayer matrix and add/subtract given value
-*/
-
 pub fn process_image(mut buf: RgbaImage, palette: Vec<[u8; 3]>, dither: Dither) -> DynamicImage {
     for (x, y, pix) in buf.enumerate_pixels_mut() {
         let dither_shift = match dither {
