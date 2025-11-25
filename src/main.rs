@@ -1,5 +1,6 @@
 mod cli;
 mod processor;
+mod palettes;
 
 use std::time::SystemTime;
 use clap::Parser;
@@ -12,7 +13,7 @@ fn main() {
     // ------------------------------------------ INPUT -------------------------------------------
     let args = Args::parse();
     validate_input(&args);
-    let output = create_output(&args);
+    let output = create_output_path(&args);
     print_selection(&args, &output);
 
     // ------------------------------------------- LOAD -------------------------------------------
@@ -24,21 +25,19 @@ fn main() {
     // ------------------------------------------ PROCESS ------------------------------------------
     let start_proc = SystemTime::now();
 
-    let pal_path = format!("palettes/{:?}.txt", args.palette);
-
     let buf = img.into_rgba8();
-    let palette = get_palette(pal_path);
+    let palette = get_palette(&args.palette);
     let dither = args.dither;
     let bayer = args.bayer;
 
     let processed = match args.palette {
         Gray        => process_gray(buf),
-        Gruvbox     => process_image(buf, palette, dither, bayer),
-        Everforest  => process_image(buf, palette, dither, bayer),
-        Kanagawa    => process_image(buf, palette, dither, bayer),
-        Solarized   => process_image(buf, palette, dither, bayer),
-        Molokai     => process_image(buf, palette, dither, bayer),
-        Papercut    => process_image(buf, palette, dither, bayer),
+        Gruvbox     => process_image(buf, Vec::from(palette), dither, bayer),
+        Everforest  => process_image(buf, Vec::from(palette), dither, bayer),
+        Kanagawa    => process_image(buf, Vec::from(palette), dither, bayer),
+        Solarized   => process_image(buf, Vec::from(palette), dither, bayer),
+        Molokai     => process_image(buf, Vec::from(palette), dither, bayer),
+        Papercut    => process_image(buf, Vec::from(palette), dither, bayer),
     };
     let end_proc = SystemTime::now();
     let dur_proc = end_proc.duration_since(start_proc).unwrap();
