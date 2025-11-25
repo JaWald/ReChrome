@@ -13,8 +13,12 @@ pub struct Args {
     pub palette: Palette,
 
     /// Dithering Modes
-    #[arg(short, long, value_enum, default_value = "bayer8")]
+    #[arg(short, long, value_enum, default_value = "bayer16")]
     pub dither: Dither,
+
+    /// Bayer intensity
+    #[arg(short, long, help = "Bayer amplitude [default: bayerX * 4] \n")]
+    pub bayer: Option<u8>,
 
     /// Input  file path
     #[arg(short, long, help = "\x1b[33;1mInput file path  \x1b[0m")]
@@ -28,7 +32,7 @@ pub struct Args {
     #[arg(short, long, help = "Output file path [default: <input>_<palette>_<dither>.<format>]\n")]
     pub output: Option<PathBuf>,
 
-    /// Show in-terminal (optional, recommended < 30)
+    /// Show in-terminal (recommended value: <40)
     #[arg(short = 's', long = "showcase")]
     pub size: Option<u32>,
 
@@ -51,7 +55,10 @@ pub enum Palette {
 #[derive(Debug, Clone, ValueEnum, Copy)]
 pub enum Dither {
     None,
-    Bayer8
+    Bayer2,
+    Bayer4,
+    Bayer8,
+    Bayer16
 }
 
 #[derive(Debug, Clone, ValueEnum)]
@@ -60,7 +67,6 @@ pub enum Format {
     Jpg,
     Jpeg
 }
-
 
 // checks whether image even exists
 pub fn validate_input(args: &Args) {
@@ -71,19 +77,46 @@ pub fn validate_input(args: &Args) {
 }
 
 // checks existence of output path, clones input path with new file name if necessary
-pub fn validate_output(args: &Args) -> PathBuf{
+pub fn create_output(args: &Args) -> PathBuf{
   match &args.output {
         Some(path) => path.to_path_buf(),
         None => {
             let mut path = args.input.clone();
             let input_stem = path.file_stem().unwrap().to_string_lossy();
-            let palette_str = &args.palette;
-            let dither_str = &args.dither;
-            let format_str = &args.format;
-
+            let palette_str = match args.palette {
+                Palette::Everforest => "gruvbox",
+                Palette::Gray => "gray",
+                Palette::Gruvbox => "gruvbox",
+                Palette::Kanagawa => "kanagawa",
+                Palette::Molokai => "molokai",
+                Palette::Papercut => "papercut",
+                Palette::Solarized => "solarized"
+            };
+            let bayer = match &args.bayer {
+                Some(bayer) => bayer,
+                None => &match args.dither {
+                    Dither::None => 0,
+                    Dither::Bayer2 => 8,
+                    Dither::Bayer4 => 16,
+                    Dither::Bayer8 => 32,
+                    Dither::Bayer16 => 64
+                }
+            };
+            let dither_str = match args.dither {
+                Dither::None => "".to_string(),
+                Dither::Bayer2 => format!("_bayer2-{}", bayer),
+                Dither::Bayer4 => format!("_bayer4-{}", bayer),
+                Dither::Bayer8 => format!("_bayer8-{}", bayer),
+                Dither::Bayer16 => format!("_bayer16-{}", bayer)
+            };
+            let format_str = match args.format {
+                Format::Png => "png",
+                Format::Jpg => "jpg",
+                Format::Jpeg => "jpeg"
+            };
 
             let file = format!(
-                "{}_{:?}_{:?}.{:?}",
+                "{}_{}{}.{}",
                 input_stem,
                 palette_str,
                 dither_str,
@@ -97,24 +130,21 @@ pub fn validate_output(args: &Args) -> PathBuf{
 
 }
 
+// prints dashes in corresponding size to preview image, minimum is 80
 pub fn print_dashes(show: &Option<u32>) {
-    if show.is_some() {
-        if show.unwrap() < 20 {
-            println!("{}", "-".repeat(max(60usize, ((show.unwrap() + 1) * 4) as usize)));
-        } else {
-            println!("{}", "-".repeat(((show.unwrap() + 1) * 4) as usize));
-        }
-    } else {
-        println!("{}", "-".repeat(80usize));
-    }
+    println!("{}", "-".repeat(max(80usize, ((show.unwrap_or(0) + 1) * 4) as usize)));
 }
 
 pub fn print_selection(args: &Args, output: &PathBuf) {
     print_dashes(&args.size);
     println!(" \x1b[1mSelection: \x1b[0m");
     println!("   \x1b[32;1mPalette:\x1b[0m\x1b[1m  {:?}\x1b[0m", args.palette);
-    println!("   \x1b[32;1mDither:\x1b[0m\x1b[1m   {:?}\x1b[0m", args.dither);
-    println!("   \x1b[33;1mInput:\x1b[0m    {}", args.input.to_str().unwrap());
+    match args.dither {
+        Dither::Bayer2 | Dither::Bayer4 | Dither::Bayer8 | Dither::Bayer16
+            => println!("   \x1b[33;1mDither:\x1b[0m\x1b[1m   {:?} - {:?}\x1b[0m", args.dither, args.bayer.unwrap_or(32)),
+        Dither::None => println!("   \x1b[33;1mDither:\x1b[0m\x1b[1m   {:?}\x1b[0m", args.dither)
+    }
+    println!("\n   \x1b[32;1mInput:\x1b[0m    {}", args.input.to_str().unwrap());
     println!("   \x1b[33;1mOutput:\x1b[0m   {}", output.to_str().unwrap());
     if args.runtime {
         println!("\n   \x1b[33;1mRuntime:\x1b[0m  {}", args.runtime);
@@ -133,13 +163,13 @@ pub fn print_measurements(load: Duration, proc: Duration, save: Duration) {
     println!("   \x1b[33;1mSave:\x1b[0m    {:>8.1?}", save);
 }
 
-pub fn print_preview(img: DynamicImage, max_rows: u32) {
+pub fn print_preview(img: DynamicImage, rows: u32) {
     let width = img.width();
     let height = img.height();
 
-    let max_cols = max_rows * 2;
-    let step_x = (width / max_cols).max(1);
-    let step_y = (height / max_rows).max(1);
+    let cols = rows * 2;
+    let step_x = (width / cols).max(1);
+    let step_y = (height / rows).max(1);
 
     println!();
     for y in (0..height).step_by(step_y as usize) {
