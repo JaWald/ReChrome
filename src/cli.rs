@@ -9,15 +9,15 @@ use image::{DynamicImage, GenericImageView};
 #[command(version="0.0.1", about, long_about = None)]
 pub struct Args {
     /// Color palette
-    #[arg(short, long, value_enum, help = "\x1b[33;1mColor Palette  \x1b[0m")]
+    #[arg(short, long, value_enum, help = "\x1b[33;1mColor Palette   \x1b[0m")]
     pub palette: Palette,
 
     /// Dithering Modes
-    #[arg(short, long, value_enum, default_value = "bayer16")]
+    #[arg(short, long, value_enum, default_value = "bayer16", help = "Dithering Modes ")]
     pub dither: Dither,
 
     /// Bayer intensity
-    #[arg(short, long, help = "Bayer amplitude [default: bayerX * 4] \n")]
+    #[arg(short, long, help = "Bayer amplitude  [default: bayerX * 4] \n")]
     pub bayer: Option<u8>,
 
     /// Input  file path
@@ -77,14 +77,14 @@ pub fn validate_input(args: &Args) {
 }
 
 // checks existence of output path, clones input path with new file name if necessary
-pub fn create_output(args: &Args) -> PathBuf{
+pub fn create_output_path(args: &Args) -> PathBuf{
   match &args.output {
         Some(path) => path.to_path_buf(),
         None => {
             let mut path = args.input.clone();
             let input_stem = path.file_stem().unwrap().to_string_lossy();
             let palette_str = match args.palette {
-                Palette::Everforest => "gruvbox",
+                Palette::Everforest => "everforest",
                 Palette::Gray => "gray",
                 Palette::Gruvbox => "gruvbox",
                 Palette::Kanagawa => "kanagawa",
@@ -115,22 +115,30 @@ pub fn create_output(args: &Args) -> PathBuf{
                 Format::Jpeg => "jpeg"
             };
 
-            let file = format!(
-                "{}_{}{}.{}",
-                input_stem,
-                palette_str,
-                dither_str,
-                format_str
-            );
-
-            path.set_file_name(file);
+            if palette_str == "gray" {
+                let file = format!(
+                    "{}_{}.{}",
+                    input_stem,
+                    palette_str,
+                    format_str
+                );
+                path.set_file_name(file);
+            } else {
+                let file = format!(
+                    "{}_{}{}.{}",
+                    input_stem,
+                    palette_str,
+                    dither_str,
+                    format_str
+                );
+                path.set_file_name(file);
+            }
             path
         }
     }
-
 }
 
-// prints dashes in corresponding size to preview image, minimum is 80
+// prints dashes in corresponding size to preview image
 pub fn print_dashes(show: &Option<u32>) {
     println!("{}", "-".repeat(max(80usize, ((show.unwrap_or(0) + 1) * 4) as usize)));
 }
