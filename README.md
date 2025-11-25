@@ -4,7 +4,7 @@ It applies Bayer ordered dithering to reduce banding, then maps each pixel to th
 
 It loads an image from the specified input path, applies dithering, performs palette quantization, and writes the processed output file in the desired format.
 ## Palettes
-|[Original](https://unsplash.com/de/fotos/ein-schwarzer-hintergrund-mit-einem-rosa-und-blauen-design-L8fXJgMk5jc)|[Everforest](https://github.com/sainnhe/everforest/blob/master/palette.md9)|[Gruvbox](https://github.com/morhetz/gruvbox)|[Kanagawa](https://github.com/rebelot/kanagawa.nvim)|
+|[Original](https://unsplash.com/de/fotos/ein-schwarzer-hintergrund-mit-einem-rosa-und-blauen-design-L8fXJgMk5jc)|[Everforest](https://github.com/sainnhe/everforest)|[Gruvbox](https://github.com/morhetz/gruvbox)|[Kanagawa](https://github.com/rebelot/kanagawa.nvim)|
 |:--:|                                 :---:                                     |                    :---:                    |                      :---:                         |
 |<img src="images/color.jpg" width="300" alt="Original">|<img src="images/color_everforest_bayer16-64.jpg" width="300" alt="Everforest">|<img src="images/color_gruvbox_bayer16-64.jpg" width="300" alt="Gruvbox">|<img src="images/color_kanagawa_bayer16-64.jpg" width="300" alt="Kanagawa">|
 ||[Molokai](https://github.com/UtkarshVerma/molokai.nvim)|[Papercut](https://github.com/NLKNguyen/papercolor-theme)|[Solarized](https://github.com/solarized/xresources)|
