@@ -23,7 +23,7 @@ fn main() {
 
     // ------------------------------------------ PROCESS ------------------------------------------
     let start_proc = SystemTime::now();
-    let dither = args.dither.unwrap_or_else(|| Dither::None);
+    let dither = args.dither;
     let pal_path = format!("palettes/{:?}.txt", args.palette);
     let palette = get_palette(pal_path);
     let buf = img.into_rgba8();
@@ -46,14 +46,15 @@ fn main() {
     let dur_save = end_save.duration_since(start_save).unwrap();
 
     if args.runtime {
-        print_dashes(&args.size);
         print_measurements(dur_load, dur_proc, dur_save);
+        print_dashes(&args.size);
     }
 
     if args.size.is_some() {
-        print_dashes(&args.size);
         print_preview(processed, args.size.unwrap());
+        print_dashes(&args.size);
     }
 
+    println!(" \x1b[1mImage saved at:\x1b[0m\n   {}", output.display());
     print_dashes(&args.size);
 }
