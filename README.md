@@ -1,37 +1,52 @@
 # ReChrome
 
-ReChrome is a CLI that recolors images based on predefined palettes.
+ReChrome is a CLI that recolors images based on predefined palettes, using Bayer ordered dithering to smooth out the color bands.
+Currently, the following palettes are available:
 
-## Currently available palettes:
+![color_gruvbox_bayer16-64]
+
+
 - [everforest](https://github.com/sainnhe/everforest/blob/master/palette.md9)
-- gray
 - [gruvbox](https://github.com/morhetz/gruvbox)
 - [kanagawa](https://github.com/rebelot/kanagawa.nvim)
 - [molokai](https://github.com/UtkarshVerma/molokai.nvim)
 - [papercut](https://github.com/NLKNguyen/papercolor-theme)
 - [solarized](https://github.com/solarized/xresources)
 
-## Planned Features
-Dithering:
-- Bayes
-- Floyd-Steinberg
+## Install
+Unfortunately, the binary might be flagged by Windows Defender as a Virus\
+To circumvent this, please follow these steps:
+- Create a folder in a root directive
+- Exclude said folder from Windows Defender
+- Unzip ReChrome to that folder
 
-## Usage
-```
+## Help
+```c++
 Usage: rechrome.exe [OPTIONS] --palette <PALETTE> --input <INPUT>
 
 Options:
-  -p, --palette <PALETTE>  Available: 
-                              > everforest    > gray
-                              > gruvbox       > kanagawa
-                              > molokai       > papercut
-                              > solarized 
-  -i, --input <INPUT>      Input  file path
-  -o, --output <OUTPUT>    Output file path (optional)
-                           
-  -s, --showcase <SIZE>    Show preview (optional, recommended < 50)
+  -p, --palette <PALETTE>  Color Palette    [possible values: gray, gruvbox, everforest, kanagawa, molokai, papercut, solarized]
+  -d, --dither <DITHER>    Dithering Modes  [default: bayer16] [possible values: none, bayer2, bayer4, bayer8, bayer16]
+  -b, --bayer <BAYER>      Bayer amplitude  [default: bayerX * 4]
+
+  -i, --input <INPUT>      Input file path
+  -f, --format <FORMAT>    Output file type [default: png] [possible values: png, jpg, jpeg]
+  -o, --output <OUTPUT>    Output file path [default: <input>_<palette>_<dither>.<format>]
+
+  -s, --showcase <SIZE>    Show in-terminal (recommended value: <40)
   -r, --runtime            Show timing measurements
-                           
+
   -h, --help               Print help
   -V, --version            Print version
 ```
+### Example usage
+Simple conversion\
+` <correctDir>.\rechrome.exe -i "C:\Users\<user>\Downloads\flower.jpeg" -p kanagawa`
+
+Conversion with preview\
+` <correctDir>.\rechrome.exe -i "C:\Users\<user>\Downloads\flower.jpeg" -p kanagawa -s 15`
+
+Manual dithering (watercolor effect)\
+` <correctDir>.\rechrome.exe -i "C:\Users\<user>\Downloads\flower.jpeg" -p kanagawa -d bayer2 -b 128`
+
+In all these examples, ReChrome saves the image to the input directory, appending palette and dithering parameter to the file name.
