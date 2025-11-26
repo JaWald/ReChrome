@@ -106,7 +106,8 @@ pub fn get_palette(palette: &Palette) -> &[[u8; 3]] {
     pal
 }
 
-/* for dev
+/* for palette conversion in development
+
 pub fn print_palette(str: &String) {
     let content = std::fs::read_to_string(str).expect("Should have been able to read file");
 
