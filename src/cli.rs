@@ -4,6 +4,8 @@ use std::path::PathBuf;
 use std::time::Duration;
 use clap::{Parser, ValueEnum};
 use image::{DynamicImage, GenericImageView};
+use AppError::InputFileDoesNotExist;
+use crate::error::AppError;
 
 #[derive(Parser, Debug)]
 #[command(version="0.0.1", about, long_about = None)]
@@ -69,10 +71,11 @@ pub enum Format {
 }
 
 // checks whether image even exists
-pub fn validate_input(args: &Args) {
+pub fn validate_input(args: &Args) -> Result<(), AppError> {
     if !args.input.exists() {
-        eprintln!("\n\x1b[31;1mError -->\x1b[0m Input file does not exist at:\n          {:?} \n", args.input);
-        std::process::exit(1);
+        Err(InputFileDoesNotExist(args.input.clone()))
+    } else {
+        Ok(())
     }
 }
 
@@ -152,8 +155,8 @@ pub fn print_selection(args: &Args, output: &PathBuf) {
             => println!("   \x1b[33;1mDither:\x1b[0m\x1b[1m   {:?} - {:?}\x1b[0m", args.dither, args.bayer.unwrap_or(32)),
         Dither::None => println!("   \x1b[33;1mDither:\x1b[0m\x1b[1m   {:?}\x1b[0m", args.dither)
     }
-    println!("\n   \x1b[32;1mInput:\x1b[0m    {}", args.input.to_str().unwrap());
-    println!("   \x1b[33;1mOutput:\x1b[0m   {}", output.to_str().unwrap());
+    println!("\n   \x1b[32;1mInput:\x1b[0m    {}", args.input.display());
+    println!("   \x1b[33;1mOutput:\x1b[0m   {}", output.display());
     if args.runtime {
         println!("\n   \x1b[33;1mRuntime:\x1b[0m  {}", args.runtime);
     }

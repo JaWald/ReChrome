@@ -1,26 +1,55 @@
 mod cli;
 mod processor;
 mod palettes;
+mod error;
 
+use std::process::exit;
 use std::time::SystemTime;
 use clap::Parser;
 use cli::Args;
 use processor::*;
 use cli::*;
 use cli::Palette::*;
+use crate::error::AppError;
 
 fn main() {
+    match run() {
+        Ok(_) => {}
+        Err(AppError::InputFileDoesNotExist(input_file)) => {
+            eprintln!("\n\x1b[31;1mERROR[001] --->\x1b[0m\x1b[1m Invalid input path, no file found at\x1b[0m ");
+            eprintln!("{:>16}{}\n", "", input_file.to_str().unwrap());
+            exit(1)
+        },
+        Err(AppError::ImageError(e)) => {
+            eprintln!("\n\x1b[31;1mERROR[002] --->\x1b[0m\x1b[1m Wrong file format\x1b[0m");
+            eprintln!("{:>16}{}\n", "", e);
+            exit(1)
+        },
+        Err(AppError::SystemTimeError(e)) => {
+            eprintln!("\n\x1b[31;1mERROR[003] --->\x1b[0m\x1b[1m Timing Measurement failed\x1b[0m");
+            eprintln!("{:>16}{}\n", "", e);
+            exit(1)
+        },
+        Err(AppError::IoError(e)) => {
+            eprintln!("\n\x1b[31;1mERROR[004] --->\x1b[0m\x1b[1m IO Error occured\x1b[0m");
+            eprintln!("{:>16}{}\n", "", e);
+            exit(1)
+        }
+    }
+}
+
+fn run() -> Result<(), AppError> {
     // ------------------------------------------ INPUT -------------------------------------------
     let args = Args::parse();
-    validate_input(&args);
+    validate_input(&args)?;
     let output = create_output_path(&args);
     print_selection(&args, &output);
 
     // ------------------------------------------- LOAD -------------------------------------------
     let start_load = SystemTime::now();
-    let img = image::open(&args.input).expect("Should have loaded input image");
+    let img = image::open(&args.input)?;
     let end_load = SystemTime::now();
-    let dur_load = end_load.duration_since(start_load).unwrap();
+    let dur_load = end_load.duration_since(start_load)?;
 
     // ------------------------------------------ PROCESS ------------------------------------------
     let start_proc = SystemTime::now();
@@ -40,13 +69,13 @@ fn main() {
         Papercut    => process_image(buf, Vec::from(palette), dither, bayer),
     };
     let end_proc = SystemTime::now();
-    let dur_proc = end_proc.duration_since(start_proc).unwrap();
+    let dur_proc = end_proc.duration_since(start_proc)?;
 
     // ------------------------------------------ OUTPUT ------------------------------------------
     let start_save = SystemTime::now();
-    processed.save(&output).expect("failed to save image");
+    processed.save(&output)?;
     let end_save = SystemTime::now();
-    let dur_save = end_save.duration_since(start_save).unwrap();
+    let dur_save = end_save.duration_since(start_save)?;
 
     if args.runtime {
         print_measurements(dur_load, dur_proc, dur_save);
@@ -60,4 +89,5 @@ fn main() {
 
     println!(" \x1b[1mImage saved at:\x1b[0m\n   {}", output.display());
     print_dashes(&args.size);
+    Ok(())
 }
