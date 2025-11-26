@@ -1,5 +1,7 @@
+use std::path::PathBuf;
 use image::{DynamicImage, Rgba, RgbaImage};
 use crate::cli::{Dither, Palette};
+use crate::cli::Dither::{Bayer16, Bayer2, Bayer4, Bayer8};
 use crate::palettes::*;
 
 // see ITU-R BT.709
@@ -53,22 +55,15 @@ pub fn process_gray(mut buf: RgbaImage) -> DynamicImage {
     DynamicImage::ImageRgba8(buf)
 }
 
-pub fn process_image(mut buf: RgbaImage, palette: Vec<[u8; 3]>, dither: Dither, bayer: Option<u8>) -> DynamicImage {
+pub fn process_image(mut buf: RgbaImage, palette: Vec<[u8; 3]>, dither: Dither, amplitude: f32) -> DynamicImage {
     for (x, y, pix) in buf.enumerate_pixels_mut() {
-        let ideal_ampl = match dither {
-            Dither::None => 0,
-            Dither::Bayer2 => 8,
-            Dither::Bayer4 => 16,
-            Dither::Bayer8 => 32,
-            Dither::Bayer16 => 64
-        };
-        let amplitude :f32 = bayer.unwrap_or_else(|| ideal_ampl) as f32;
+
         let dither_shift = match dither {
             Dither::None => 0.0,
-            Dither::Bayer2 => (BAYER2[(y % 2) as usize][(x % 2) as usize] as f32 / 4.0 - 0.5) * amplitude,
-            Dither::Bayer4 => (BAYER4[(y % 4) as usize][(x % 4) as usize] as f32 / 16.0 - 0.5) * amplitude,
-            Dither::Bayer8 => (BAYER8[(y % 8) as usize][(x % 8) as usize] as f32 / 64.0 - 0.5) * amplitude,
-            Dither::Bayer16 => (BAYER16[(y % 16) as usize][(x % 16) as usize] as f32 / 256.0 - 0.5) * amplitude
+            Bayer2 => (BAYER2[(y % 2) as usize][(x % 2) as usize] as f32 / 4.0 - 0.5) * amplitude,
+            Bayer4 => (BAYER4[(y % 4) as usize][(x % 4) as usize] as f32 / 16.0 - 0.5) * amplitude,
+            Bayer8 => (BAYER8[(y % 8) as usize][(x % 8) as usize] as f32 / 64.0 - 0.5) * amplitude,
+            Bayer16 => (BAYER16[(y % 16) as usize][(x % 16) as usize] as f32 / 256.0 - 0.5) * amplitude
         };
 
         let r = (pix[0] as f32 + dither_shift).clamp(0.0, 255.0);
@@ -104,6 +99,53 @@ pub fn get_palette(palette: &Palette) -> &[[u8; 3]] {
         Palette::Gray => &[[0, 0, 0]],
     };
     pal
+}
+
+pub fn test(bayer_in: Option<u8>, input: PathBuf, buf: RgbaImage, palette: [&[[u8; 3]]; 6], dither_arr: [Dither; 5], dither: Dither) {
+    for p in palette.iter() {
+        for d in dither_arr.iter() {
+            let mut path = input.clone();
+            let input_stem = path.file_stem().unwrap().to_string_lossy();
+            let palette_str = match p {
+                &EVERFOREST => "everforest",
+                &GRUVBOX => "gruvbox",
+                &KANAGAWA => "kanagawa",
+                &MOLOKAI => "molokai",
+                &PAPERCUT => "papercut",
+                &SOLARIZED => "solarized",
+                _ => ""
+            };
+            let ampl = match &bayer_in {
+                Some(bayer) => bayer,
+                None => &match dither {
+                    Dither::None => 0,
+                    Bayer2 => 8,
+                    Bayer4 => 16,
+                    Bayer8 => 32,
+                    Bayer16 => 64
+                }
+            };
+            let dither_str = match d {
+                Dither::None => "".to_string(),
+                Bayer2 => format!("_bayer2-{}", ampl),
+                Bayer4 => format!("_bayer4-{}", ampl),
+                Bayer8 => format!("_bayer8-{}", ampl),
+                Bayer16 => format!("_bayer16-{}", ampl)
+            };
+            let format_str = "jpg";
+            let file = format!(
+                "{}_{}{}.{}",
+                input_stem,
+                palette_str,
+                dither_str,
+                format_str
+            );
+            path.set_file_name(file);
+            let processed = process_image(buf.clone(), Vec::from(*p), *d, 4.0);
+            processed.save(path.clone()).expect("Couldn't save file");
+            println!(" \x1b[1mImage saved at:\x1b[0m\n   {}", path.display());
+        }
+    }
 }
 
 /* for palette conversion in development

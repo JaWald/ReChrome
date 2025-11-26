@@ -41,6 +41,9 @@ pub struct Args {
     /// Show runtime
     #[arg(short = 'r', long, help = "Show timing measurements\n")]
     pub runtime: bool,
+
+    #[arg(short, long)]
+    pub test: bool,
 }
 
 #[derive(Debug, Clone, ValueEnum)]

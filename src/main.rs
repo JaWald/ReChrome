@@ -10,7 +10,9 @@ use cli::Args;
 use processor::*;
 use cli::*;
 use cli::Palette::*;
+use crate::cli::Dither::{Bayer16, Bayer2, Bayer4, Bayer8};
 use crate::error::AppError;
+use crate::palettes::{EVERFOREST, GRUVBOX, KANAGAWA, MOLOKAI, PAPERCUT, SOLARIZED};
 
 fn main() {
     match run() {
@@ -58,15 +60,23 @@ fn run() -> Result<(), AppError> {
     let palette = get_palette(&args.palette);
     let dither = args.dither;
     let bayer = args.bayer;
+    let ideal_ampl = match dither {
+        Dither::None => 0,
+        Bayer2 => 8,
+        Bayer4 => 16,
+        Bayer8 => 32,
+        Bayer16 => 64
+    };
+    let amplitude :f32 = bayer.unwrap_or_else(|| ideal_ampl) as f32;
 
     let processed = match args.palette {
         Gray        => process_gray(buf),
-        Gruvbox     => process_image(buf, Vec::from(palette), dither, bayer),
-        Everforest  => process_image(buf, Vec::from(palette), dither, bayer),
-        Kanagawa    => process_image(buf, Vec::from(palette), dither, bayer),
-        Solarized   => process_image(buf, Vec::from(palette), dither, bayer),
-        Molokai     => process_image(buf, Vec::from(palette), dither, bayer),
-        Papercut    => process_image(buf, Vec::from(palette), dither, bayer),
+        Gruvbox     => process_image(buf, Vec::from(palette), dither, amplitude),
+        Everforest  => process_image(buf, Vec::from(palette), dither, amplitude),
+        Kanagawa    => process_image(buf, Vec::from(palette), dither, amplitude),
+        Solarized   => process_image(buf, Vec::from(palette), dither, amplitude),
+        Molokai     => process_image(buf, Vec::from(palette), dither, amplitude),
+        Papercut    => process_image(buf, Vec::from(palette), dither, amplitude),
     };
     let end_proc = SystemTime::now();
     let dur_proc = end_proc.duration_since(start_proc)?;
@@ -89,5 +99,16 @@ fn run() -> Result<(), AppError> {
 
     println!(" \x1b[1mImage saved at:\x1b[0m\n   {}", output.display());
     print_dashes(&args.size);
+
+    if args.test {
+        let buf = image::open(&args.input)?.into_rgba8();
+        let palette = [EVERFOREST, GRUVBOX, KANAGAWA, MOLOKAI, PAPERCUT, SOLARIZED];
+        let dither_arr = [Bayer2, Bayer4, Bayer8, Bayer16, Dither::None];
+        let bayer = args.bayer;
+        let input = args.input.clone();
+        let dither = args.dither;
+        test(bayer, input, buf, palette, dither_arr, dither);
+    }
+
     Ok(())
 }
