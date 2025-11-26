@@ -1,5 +1,6 @@
 use std::path::PathBuf;
 use image::{DynamicImage, Rgba, RgbaImage};
+use rayon::prelude::*;
 use crate::cli::{Dither, Palette};
 use crate::cli::Dither::{Bayer16, Bayer2, Bayer4, Bayer8};
 use crate::palettes::*;
@@ -56,8 +57,7 @@ pub fn process_gray(mut buf: RgbaImage) -> DynamicImage {
 }
 
 pub fn process_image(mut buf: RgbaImage, palette: Vec<[u8; 3]>, dither: Dither, amplitude: f32) -> DynamicImage {
-    for (x, y, pix) in buf.enumerate_pixels_mut() {
-
+    buf.par_enumerate_pixels_mut().for_each(|(x, y, pix)| {
         let dither_shift = match dither {
             Dither::None => 0.0,
             Bayer2 => (BAYER2[(y % 2) as usize][(x % 2) as usize] as f32 / 4.0 - 0.5) * amplitude,
@@ -84,7 +84,7 @@ pub fn process_image(mut buf: RgbaImage, palette: Vec<[u8; 3]>, dither: Dither, 
             }
         }
         *pix = Rgba([best[0], best[1], best[2], 0xFF]);
-    }
+    });
     DynamicImage::ImageRgba8(buf)
 }
 
@@ -141,7 +141,7 @@ pub fn test(bayer_in: Option<u8>, input: PathBuf, buf: RgbaImage, palette: [&[[u
                 format_str
             );
             path.set_file_name(file);
-            let processed = process_image(buf.clone(), Vec::from(*p), *d, 4.0);
+            let processed = process_image(buf.clone(), Vec::from(*p), *d, *ampl as f32);
             processed.save(path.clone()).expect("Couldn't save file");
             println!(" \x1b[1mImage saved at:\x1b[0m\n   {}", path.display());
         }
