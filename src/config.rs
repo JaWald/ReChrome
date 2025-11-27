@@ -3,7 +3,7 @@ use crate::cli::Args;
 use crate::cli::Dither::*;
 use crate::cli::Palette::*;
 use crate::error::AppError;
-use crate::palettes::*;
+use crate::data::*;
 
 pub struct Config {
     pub input: String,
@@ -19,7 +19,6 @@ pub struct Config {
     pub runtime: bool,
     pub test: TestType,
 }
-
 
 pub fn from_args(args: &Args) -> Result<Config, AppError> {
     let palette = match args.palette {
@@ -71,18 +70,18 @@ pub fn create_output_path(args: &Args, ampl: f32, dither: Dither, format: &str) 
                 .ok_or_else(|| AppError::InputFileDoesNotExist(args.input.clone()))?
                 .to_string_lossy();
             let palette_str = match args.palette {
-                Everforest => "everforest",
-                Gruvbox => "gruvbox",
-                Kanagawa => "kanagawa",
-                Molokai => "molokai",
-                Papercut => "papercut",
-                Solarized => "solarized"
+                Everforest => "evrfrst",
+                Gruvbox =>    "gruvbox",
+                Kanagawa =>   "kanagwa",
+                Molokai =>    "molokai",
+                Papercut =>   "paprcut",
+                Solarized =>  "solrizd"
             };
             let dither_str = match dither {
                 Raw => "".to_string(),
-                Bayer2 => format!("_bayer2-{}", ampl),
-                Bayer4 => format!("_bayer4-{}", ampl),
-                Bayer8 => format!("_bayer8-{}", ampl),
+                Bayer2 =>  format!("_bayer02-{}", ampl),
+                Bayer4 =>  format!("_bayer04-{}", ampl),
+                Bayer8 =>  format!("_bayer08-{}", ampl),
                 Bayer16 => format!("_bayer16-{}", ampl)
             };
             let file = format!(

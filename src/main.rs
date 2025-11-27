@@ -1,6 +1,6 @@
 mod cli;
 mod processor;
-mod palettes;
+mod data;
 mod error;
 mod config;
 mod test;
