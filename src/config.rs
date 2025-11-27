@@ -38,7 +38,7 @@ pub fn from_args(args: &Args) -> Result<Config, AppError> {
         Bayer8 => 32,
         Bayer16 => 64
     };
-    let ampl = args.bayer.unwrap_or_else(|| ideal_ampl) as f32;
+    let ampl = args.ampl.unwrap_or_else(|| ideal_ampl) as f32;
 
     let input = match args.input.to_str() {
         Some(input) => input,
@@ -61,6 +61,7 @@ pub fn from_args(args: &Args) -> Result<Config, AppError> {
 }
 
 // sets output path either to user desired path OR creates a new one from given arguments
+// format: <originalName>_<palette>_[<dither>]-[<amplitude>].<format>
 pub fn create_output_path(args: &Args, ampl: f32, dither: Dither, format: &str) -> Result<String, AppError> {
     match &args.output {
         Some(path) => Ok(path.to_string_lossy().to_string()),

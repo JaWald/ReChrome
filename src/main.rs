@@ -66,7 +66,7 @@ fn run() -> Result<(), AppError> {
     let end_save = SystemTime::now();
     let dur_save = end_save.duration_since(start_save)?;
 
-    if config.runtime { print_measurements(config.size, dur_load, dur_proc, dur_save); }
+    if config.runtime  { print_measurements(config.size, dur_load, dur_proc, dur_save); }
     if config.size > 0 { print_preview(processed, config.size); }
 
     println!(" \x1b[1mImage saved at:\x1b[0m\n   {}", &config.output);

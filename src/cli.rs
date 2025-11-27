@@ -10,12 +10,12 @@ pub struct Args {
     pub palette: Palette,
 
     /// Dithering Modes
-    #[arg(short, long, value_enum, default_value = "bayer16", help = "Dithering Modes ")]
+    #[arg(short, long, value_enum, default_value = "bayer8", help = "Dithering Modes ")]
     pub dither: Dither,
 
     /// Bayer amplitude
     #[arg(short, long, help = "Bayer Amplitude  [default: bayerX * 4, <256] \n")]
-    pub bayer: Option<u8>,
+    pub ampl: Option<u8>,
 
     /// Input  file path
     #[arg(short, long, help = "\x1b[33;1mInput file path  \x1b[0m")]
