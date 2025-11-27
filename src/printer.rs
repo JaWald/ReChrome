@@ -30,12 +30,13 @@ pub fn print_selection(config: &Config, output: &str) {
     print_dashes(config.size);
 }
 
-pub fn print_measurements(load: Duration, proc: Duration, save: Duration) {
+pub fn print_measurements(size: u32, load: Duration, proc: Duration, save: Duration) {
     println!(" \x1b[1mPerformance:\x1b[0m");
     println!("   \x1b[32;1mTotal:\x1b[0m \x1b[1m  {:>8.1?}\x1b[0m", load + proc + save);
     println!("   \x1b[33;1mLoad:\x1b[0m    {:>8.1?}", load);
     println!("   \x1b[33;1mProcess:\x1b[0m {:>8.1?}", proc);
     println!("   \x1b[33;1mSave:\x1b[0m    {:>8.1?}", save);
+    print_dashes(size);
 }
 
 pub fn print_preview(img: DynamicImage, rows: u32) {
@@ -56,4 +57,49 @@ pub fn print_preview(img: DynamicImage, rows: u32) {
         println!("\x1b[0m");
     }
     println!("\x1b[0m");
+    print_dashes(rows);
+}
+
+// for palette conversion in development
+pub fn _print_palette(str: &String) {
+    let content = std::fs::read_to_string(str).expect("Should have been able to read file");
+
+    let mut count = 0;
+    for l in content.lines() {
+        if l.starts_with("//") || l.is_empty() { continue }
+        let r = u8::from_str_radix(&l[0..2], 16).expect("Should have been able to parse red");
+        let g = u8::from_str_radix(&l[2..4], 16).expect("Should have been able to parse green");
+        let b = u8::from_str_radix(&l[4..6], 16).expect("Should have been able to parse blue");
+        print!("[{:>3}, {:>3}, {:>3}], ", r, g, b);
+        if count % 4 == 3 {
+            println!();
+        }
+        count += 1;
+    }
+    println!();
+}
+
+// Mpre(i,j) = Mint(i,j) / n^2 - 0.5 * maxValue
+pub fn _print_matrix(matrix: [[u8; 16]; 16]) {
+    let mut max = 0.0;
+    for line in matrix {
+        for num in line {
+            let new = num as f32 / (matrix.len() as f32 * matrix.len() as f32);
+            if new > max {
+                max = new;
+            }
+        }
+    }
+    println!("MAX = {}", max);
+
+    print!("[");
+    for line in matrix {
+        print!("[");
+        for num in line {
+            let new = num as f32 / (matrix.len() as f32 * matrix.len() as f32);
+            print!(" {:>4.7},", new - 0.5 * max);
+        }
+        println!("],")
+    }
+    println!("];");
 }

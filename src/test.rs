@@ -71,10 +71,10 @@ fn test_dither(args: &Args, format_str: &str) {
         let input_stem = path.file_stem().unwrap().to_string_lossy();
         let dither_str = match d {
             Raw => "".to_string(),
-            Bayer2 => format!("_bayer02-{}", 32),
-            Bayer4 => format!("_bayer04-{}", 32),
-            Bayer8 => format!("_bayer08-{}", 32),
-            Bayer16 => format!("_bayer16-{}", 32)
+            Bayer2 => format!("_bayer02-{}", 128),
+            Bayer4 => format!("_bayer04-{}", 128),
+            Bayer8 => format!("_bayer08-{}", 128),
+            Bayer16 => format!("_bayer16-{}", 128)
         };
         let file = format!(
             "{}_Dit_kanagwa{}.{}",

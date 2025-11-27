@@ -12,7 +12,6 @@ use clap::Parser;
 use processor::*;
 use cli::*;
 use crate::config::*;
-use crate::data::{BAYER2, BAYER4};
 use crate::error::AppError;
 use crate::printer::*;
 use crate::test::test;
@@ -47,7 +46,6 @@ fn run() -> Result<(), AppError> {
     // ------------------------------------------ INPUT -------------------------------------------
     let args = Args::parse();
     let config = from_args(&args)?;
-
     print_selection(&config, config.output.as_str());
 
     // ------------------------------------------- LOAD -------------------------------------------
@@ -68,20 +66,12 @@ fn run() -> Result<(), AppError> {
     let end_save = SystemTime::now();
     let dur_save = end_save.duration_since(start_save)?;
 
-    if config.runtime {
-        print_measurements(dur_load, dur_proc, dur_save);
-        print_dashes(config.size);
-    }
-
-    if config.size > 0 {
-        print_preview(processed, config.size);
-        print_dashes(config.size);
-    }
+    if config.runtime { print_measurements(config.size, dur_load, dur_proc, dur_save); }
+    if config.size > 0 { print_preview(processed, config.size); }
 
     println!(" \x1b[1mImage saved at:\x1b[0m\n   {}", &config.output);
     print_dashes(config.size);
     test(&args, &config.test);
-    convert_matrix(BAYER2);
 
     Ok(())
 }

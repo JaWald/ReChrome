@@ -13,8 +13,8 @@ pub struct Args {
     #[arg(short, long, value_enum, default_value = "bayer16", help = "Dithering Modes ")]
     pub dither: Dither,
 
-    /// Bayer intensity
-    #[arg(short, long, help = "Bayer amplitude  [default: bayerX * 4] \n")]
+    /// Bayer amplitude
+    #[arg(short, long, help = "Bayer Amplitude  [default: bayerX * 4, <256] \n")]
     pub bayer: Option<u8>,
 
     /// Input  file path
@@ -29,15 +29,16 @@ pub struct Args {
     #[arg(short, long, help = "Output file path [default: <input>_<palette>_<dither>.<format>]\n")]
     pub output: Option<PathBuf>,
 
-    /// Show in-terminal (recommended value: <40)
+    /// Show in-terminal (recommended value: <= 20)
     #[arg(short = 's', long = "showcase")]
     pub size: Option<u32>,
 
     /// Show runtime
-    #[arg(short = 'r', long, help = "Show timing measurements\n")]
+    #[arg(short = 'r', long, help = "Show runtime performance\n")]
     pub runtime: bool,
 
-    #[arg(short, long)]
+    /// Tests arguments
+    #[arg(short, long, help = "Test arguments  ")]
     pub test: Option<TestType>,
 }
 
