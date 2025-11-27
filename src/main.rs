@@ -4,6 +4,7 @@ mod data;
 mod error;
 mod config;
 mod test;
+mod printer;
 
 use std::process::exit;
 use std::time::SystemTime;
@@ -12,6 +13,7 @@ use processor::*;
 use cli::*;
 use crate::config::*;
 use crate::error::AppError;
+use crate::printer::*;
 use crate::test::test;
 
 fn main() {

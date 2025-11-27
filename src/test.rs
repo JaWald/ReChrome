@@ -1,7 +1,8 @@
 use std::time::SystemTime;
-use crate::cli::{print_dashes, Args, Dither, TestType};
+use crate::cli::{Args, Dither, TestType};
 use crate::cli::Dither::*;
 use crate::data::*;
+use crate::printer::print_dashes;
 use crate::processor::process_image;
 
 const PALETTE_ARR: [&[[u8; 3]]; 6] = [EVERFOREST, GRUVBOX, KANAGAWA, MOLOKAI, PAPERCUT, SOLARIZED];

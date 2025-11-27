@@ -3,7 +3,6 @@ use rayon::prelude::*;
 use crate::cli::{Dither};
 use crate::cli::Dither::*;
 use crate::data;
-use crate::data::BAYER2;
 
 pub fn process_image(mut buf: RgbaImage, palette: Vec<[u8; 3]>, dither: Dither, amplitude: f32) -> DynamicImage {
     buf.par_enumerate_pixels_mut().for_each(|(x, y, pix)| {
