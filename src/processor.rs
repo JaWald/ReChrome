@@ -1,8 +1,10 @@
+use std::io::BufRead;
 use image::{DynamicImage, Rgba, RgbaImage};
 use rayon::prelude::*;
 use crate::cli::{Dither};
 use crate::cli::Dither::*;
 use crate::data;
+use crate::data::{BAYER16, BAYER2, BAYER4, BAYER8};
 
 pub fn process_image(mut buf: RgbaImage, palette: Vec<[u8; 3]>, dither: Dither, amplitude: f32) -> DynamicImage {
     buf.par_enumerate_pixels_mut().for_each(|(x, y, pix)| {
@@ -36,9 +38,8 @@ pub fn process_image(mut buf: RgbaImage, palette: Vec<[u8; 3]>, dither: Dither, 
     DynamicImage::ImageRgba8(buf)
 }
 
-/* for palette conversion in development
-
-pub fn print_palette(str: &String) {
+// for palette conversion in development
+pub fn _convert_palette(str: &String) {
     let content = std::fs::read_to_string(str).expect("Should have been able to read file");
 
     let mut count = 0;
@@ -55,4 +56,28 @@ pub fn print_palette(str: &String) {
     }
     println!();
 }
-*/
+
+// Mpre(i,j) = Mint(i,j) / n^2 - 0.5 * maxValue
+pub fn convert_matrix(matrix: [[u8; 2]; 2]) {
+    let mut max = 0.0;
+    for line in matrix {
+        for num in line {
+            let new = num as f32 / 4.0;
+            if new > max {
+                max = new;
+            }
+        }
+    }
+    println!("MAX = {}", max);
+
+    print!("[");
+    for line in matrix {
+        print!("[");
+        for num in line {
+            let new = num as f32 / 4.0;
+            print!(" {:>4.5},", new - 0.5 * max );
+        }
+        println!("]")
+    }
+    println!("];");
+}

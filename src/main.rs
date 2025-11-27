@@ -12,6 +12,7 @@ use clap::Parser;
 use processor::*;
 use cli::*;
 use crate::config::*;
+use crate::data::{BAYER2, BAYER4};
 use crate::error::AppError;
 use crate::printer::*;
 use crate::test::test;
@@ -80,6 +81,7 @@ fn run() -> Result<(), AppError> {
     println!(" \x1b[1mImage saved at:\x1b[0m\n   {}", &config.output);
     print_dashes(config.size);
     test(&args, &config.test);
+    convert_matrix(BAYER2);
 
     Ok(())
 }
