@@ -11,7 +11,7 @@ pub struct Config {
     //pub format: String,
 
     pub palette: Vec<[u8; 3]>,
-    pub palette_print: Palette,
+    pub palette_name: String,
     pub dither: Dither,
     pub ampl: f32,
 
@@ -21,15 +21,32 @@ pub struct Config {
 }
 
 pub fn from_args(args: &Args) -> Result<Config, AppError> {
-    let palette = match args.palette {
-        Everforest => EVERFOREST.to_vec(),
-        Gruvbox => GRUVBOX.to_vec(),
-        Kanagawa => KANAGAWA.to_vec(),
-        Molokai => MOLOKAI.to_vec(),
-        Papercut => PAPERCUT.to_vec(),
-        Solarized => SOLARIZED.to_vec(),
+    let palette = match &args.palette {
+        Some(pal) => {
+            match pal {
+                Everforest => EVERFOREST.to_vec(),
+                Gruvbox => GRUVBOX.to_vec(),
+                Kanagawa => KANAGAWA.to_vec(),
+                Molokai => MOLOKAI.to_vec(),
+                Papercut => PAPERCUT.to_vec(),
+                Solarized => SOLARIZED.to_vec()
+            }
+        }
+        None => vec![]
     };
-    let palette_print = args.palette.clone();
+    let palette_name = match &args.palette {
+        Some(pal) => {
+            match pal {
+                Everforest => "Everforest",
+                Gruvbox => "Gruvbox",
+                Kanagawa => "Kanagawa",
+                Molokai => "Molokai",
+                Papercut => "Papercut",
+                Solarized => "Solarized"
+            }
+        }
+        None => ""
+    }.to_string();
     let dither = args.dither;
     let ideal_ampl = match dither {
         Raw => 0,
@@ -49,7 +66,7 @@ pub fn from_args(args: &Args) -> Result<Config, AppError> {
         Format::Jpg => "jpg".to_string(),
         Format::Jpeg => "jpeg".to_string()
     };
-    let output = create_output_path(&args, ampl, dither, format.as_str())?;
+    let output = create_output_path(&args, palette_name.as_str(), ampl, dither, format.as_str())?;
 
     let size= args.size.unwrap_or(0);
     let runtime = args.runtime;
@@ -57,12 +74,12 @@ pub fn from_args(args: &Args) -> Result<Config, AppError> {
         Some(test) => {test}
         None => TestType::None
     };
-    Ok(Config { input, output, /*format,*/ palette, palette_print, dither, ampl, size, runtime, test })
+    Ok(Config { input, output, /*format,*/ palette, palette_name, dither, ampl, size, runtime, test })
 }
 
 // sets output path either to user desired path OR creates a new one from given arguments
 // format: <originalName>_<palette>_[<dither>]-[<amplitude>].<format>
-pub fn create_output_path(args: &Args, ampl: f32, dither: Dither, format: &str) -> Result<String, AppError> {
+pub fn create_output_path(args: &Args, palette_name: &str, ampl: f32, dither: Dither, format: &str) -> Result<String, AppError> {
     match &args.output {
         Some(path) => Ok(path.to_string_lossy().to_string()),
         None => {
@@ -70,20 +87,29 @@ pub fn create_output_path(args: &Args, ampl: f32, dither: Dither, format: &str) 
             let input_stem = path.file_stem()
                 .ok_or_else(|| AppError::InputFileDoesNotExist(args.input.clone()))?
                 .to_string_lossy();
-            let palette_str = match args.palette {
-                Everforest => "evrfrst",
-                Gruvbox =>    "gruvbox",
-                Kanagawa =>   "kanagwa",
-                Molokai =>    "molokai",
-                Papercut =>   "paprcut",
-                Solarized =>  "solrizd"
+            let palette_str = match palette_name {
+                "Everforest" => "evrfrst",
+                "Gruvbox"    => "gruvbox",
+                "Kanagawa"   => "kanagwa",
+                "Molokai"    => "molokai",
+                "Papercut"   => "paprcut",
+                "Solarized"  => "solrizd",
+                &_ => "",
+            };
+            let ampl_str = match ampl {
+                2.0   => "--2",
+                16.0  => "-16",
+                32.0  => "-32",
+                64.0  => "-64",
+                128.0 => "128",
+                _ => ""
             };
             let dither_str = match dither {
                 Raw => "".to_string(),
-                Bayer2 =>  format!("_bayer02-{}", ampl),
-                Bayer4 =>  format!("_bayer04-{}", ampl),
-                Bayer8 =>  format!("_bayer08-{}", ampl),
-                Bayer16 => format!("_bayer16-{}", ampl)
+                Bayer2 =>  format!("_bayer-2-{}", ampl_str),
+                Bayer4 =>  format!("_bayer-4-{}", ampl_str),
+                Bayer8 =>  format!("_bayer-8-{}", ampl_str),
+                Bayer16 => format!("_bayer16-{}", ampl_str)
             };
             let file = format!(
                 "{}_{}{}.{}",

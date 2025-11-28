@@ -5,24 +5,23 @@ use crate::cli::Dither;
 use crate::config::Config;
 
 pub fn print_dashes(size: u32) {
-    println!("{}", "-".repeat(max(80usize, ((size + 1) * 4) as usize)));
+    println!("{}", "-".repeat(max(100usize, ((size + 1) * 4) as usize)));
 }
 
 pub fn print_selection(config: &Config, output: &str) {
-    print_dashes(config.size);
     println!(" \x1b[1mSelection: \x1b[0m");
-    println!("   \x1b[32;1mPalette:\x1b[0m\x1b[1m  {:?}\x1b[0m", config.palette_print);
+    println!("   \x1b[32;1mPalette:\x1b[0m\x1b[1m  {}\x1b[0m", config.palette_name);
     match config.dither {
         Dither::Bayer2 |
         Dither::Bayer4 |
         Dither::Bayer8 |
-        Dither::Bayer16 => println!("   \x1b[33;1mDither:\x1b[0m\x1b[1m   {:?} - {:?}\x1b[0m", config.dither, config.ampl),
+        Dither::Bayer16 => println!("   \x1b[33;1mDither:\x1b[0m\x1b[1m   {:?} - {:.0}\x1b[0m", config.dither, config.ampl),
         Dither::Raw => println!("   \x1b[33;1mDither:\x1b[0m\x1b[1m   {:?}\x1b[0m", config.dither)
     }
     println!("\n   \x1b[32;1mInput:\x1b[0m    {}", config.input);
     println!("   \x1b[33;1mOutput:\x1b[0m   {}", output);
     if config.runtime {
-        println!("\n   \x1b[33;1mRuntime:\x1b[0m  {}", config.runtime);
+        println!("\n   \x1b[33;1mRuntime:\x1b[0m  {}", "Show");
     }
     if config.size > 0{
         println!("   \x1b[33;1mPreview:\x1b[0m  {}x{} px", config.size * 2, config.size);

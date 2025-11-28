@@ -46,10 +46,17 @@ fn run() -> Result<(), AppError> {
     // ------------------------------------------ INPUT -------------------------------------------
     let args = Args::parse();
     let config = from_args(&args)?;
-    print_selection(&config, config.output.as_str());
+    print_dashes(config.size);
+
+    // ------------------------------------------- TEST -------------------------------------------
+    if config.test != TestType::None {
+        test(&args, &config.test, &config.size)?;
+        return Ok(());
+    }
 
     // ------------------------------------------- LOAD -------------------------------------------
     let start_load = SystemTime::now();
+    print_selection(&config, config.output.as_str());
     let img = image::open(&config.input)?;
     let end_load = SystemTime::now();
     let dur_load = end_load.duration_since(start_load)?;
@@ -71,7 +78,6 @@ fn run() -> Result<(), AppError> {
 
     println!(" \x1b[1mImage saved at:\x1b[0m\n   {}", &config.output);
     print_dashes(config.size);
-    test(&args, &config.test);
 
     Ok(())
 }

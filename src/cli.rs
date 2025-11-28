@@ -7,7 +7,8 @@ use clap::{Parser, ValueEnum};
 pub struct Args {
     /// Color palette
     #[arg(short, long, value_enum, help = "\x1b[33;1mColor Palette   \x1b[0m")]
-    pub palette: Palette,
+    #[clap(required_unless_present = "test")]
+    pub palette: Option<Palette>,
 
     /// Dithering Modes
     #[arg(short, long, value_enum, default_value = "bayer8", help = "Dithering Modes ")]
@@ -22,7 +23,7 @@ pub struct Args {
     pub input: PathBuf,
 
     /// Output file type
-    #[arg(short, long, value_enum, default_value = "png")]
+    #[arg(short, long, value_enum, default_value = "jpg")]
     pub format: Format,
 
     /// Output file path
@@ -38,7 +39,7 @@ pub struct Args {
     pub runtime: bool,
 
     /// Tests arguments
-    #[arg(short, long, help = "Test arguments  ")]
+    #[arg(short, long, help = "\x1b[33;1mTest arguments  \x1b[0m")]
     pub test: Option<TestType>,
 }
 
@@ -67,7 +68,7 @@ pub enum Format {
     Jpg,
     Jpeg
 }
-#[derive(Debug, Clone, Copy, ValueEnum)]
+#[derive(Debug, Clone, Copy, PartialEq, ValueEnum)]
 pub enum TestType {
     None,
     Palette,
