@@ -111,13 +111,12 @@ pub fn create_output_path(args: &Args, palette_name: &str, ampl: f32, dither: Di
                 "Synthwave"     => "synthwve",
                 &_ => "",
             };
-            let ampl_str = match ampl {
-                2.0   => "--2",
-                16.0  => "-16",
-                32.0  => "-32",
-                64.0  => "-64",
-                128.0 => "128",
-                _ => ""
+            let ampl_str = if ampl < 10.0 {
+                format!("--{:.0}", ampl)
+            } else if ampl < 100.0 {
+                format!("-{:.0}", ampl)
+            } else {
+                format!("{:.0}", ampl)
             };
             let dither_str = match dither {
                 Raw => "".to_string(),
