@@ -55,6 +55,6 @@ Download the most recent release under the "Releases" Section on the right hand 
 
 Unfortunately, the binary might be flagged by Windows Defender as a Virus\
 To circumvent this, please follow these steps:
-- Create a folder in a root directive
+- Create a folder in a root directory
 - Exclude said folder from Windows Defender
 - Unzip ReChrome to that folder
