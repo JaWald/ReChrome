@@ -78,7 +78,6 @@ fn run() -> Result<(), AppError> {
 
     println!(" \x1b[1mImage saved at:\x1b[0m\n   {}", &config.output);
     print_dashes(config.size);
-    //_print_palette("palettes/synthwave.txt");
     // --------------------------------------------------------------------------------------------
 
     Ok(())

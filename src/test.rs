@@ -69,7 +69,7 @@ fn test_palette(args: &Args, format_str: &str, buf: ImageBuffer<Rgba<u8>, Vec<u8
             format_str
         );
         path.set_file_name(file);
-        let processed = process_image(buf.clone(), pal.to_vec(), Bayer8, 32.0);
+        let processed = process_image(buf.clone(), pal.to_vec(), Bayer16, 64.0);
         processed.save(path.clone()).expect("Couldn't save file");
         let end = SystemTime::now();
         println!("    [{:.1?}]{:>12}   {}", end.duration_since(start).unwrap(), "Saved at:", path.display());
@@ -83,11 +83,11 @@ fn test_dither(args: &Args, format_str: &str, buf: ImageBuffer<Rgba<u8>, Vec<u8>
         let mut path = args.input.clone();
         let input_stem = path.file_stem().unwrap().to_string_lossy();
         let dither_str = match dith {
-            Raw     => format!("_bayer-0-{}", 64),
-            Bayer2  => format!("_bayer-2-{}", 64),
-            Bayer4  => format!("_bayer-4-{}", 64),
-            Bayer8  => format!("_bayer-8-{}", 64),
-            Bayer16 => format!("_bayer16-{}", 64)
+            Raw     => format!("_bayer-0-{}", 32),
+            Bayer2  => format!("_bayer-2-{}", 32),
+            Bayer4  => format!("_bayer-4-{}", 32),
+            Bayer8  => format!("_bayer-8-{}", 32),
+            Bayer16 => format!("_bayer16-{}", 32)
         };
         let file = format!(
             "{}_Dit_atomone{}.{}",
