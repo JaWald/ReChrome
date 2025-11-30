@@ -7,7 +7,7 @@ use crate::error::AppError;
 use crate::printer::print_dashes;
 use crate::processor::process_image;
 
-const PALETTE_ARR: [&[[u8; 3]]; 6] = [EVERFOREST, GRUVBOX, KANAGAWA, MOLOKAI, PAPERCUT, SOLARIZED];
+const PALETTE_ARR: [&[[u8; 3]]; 11] = [ATOMONE, CATPPUCCIN, DARCULA, EVERFOREST, GRUVBOX, KANAGAWA, MONOKAI, NORD, PAPERCUT, SOLARIZED, SYNTHWAVE];
 const DITHER_ARR: [Dither; 5] = [Raw, Bayer2, Bayer4, Bayer8, Bayer16];
 const AMPL_ARR: [f32; 5]= [2.0, 16.0, 32.0, 64.0, 128.0];
 
@@ -47,12 +47,17 @@ fn test_palette(args: &Args, format_str: &str, buf: ImageBuffer<Rgba<u8>, Vec<u8
     for pal in PALETTE_ARR.iter() {
         let start = SystemTime::now();
         let palette_str = match pal {
-            &EVERFOREST => "evrfrst",
-            &GRUVBOX => "gruvbox",
-            &KANAGAWA => "kanagwa",
-            &MOLOKAI => "molokai",
-            &PAPERCUT => "paprcut",
-            &SOLARIZED => "solrizd",
+            &ATOMONE    => "atomone",
+            &CATPPUCCIN => "catppuc",
+            &DARCULA    => "darcula",
+            &EVERFOREST => "everforst",
+            &GRUVBOX    => "gruvbox",
+            &KANAGAWA   => "kanagwa",
+            &MONOKAI    => "monokai",
+            &NORD       => "nord___",
+            &PAPERCUT   => "paprcut",
+            &SOLARIZED  => "solarizd",
+            &SYNTHWAVE  => "synthwve",
             _ => "",
         };
         let mut path = args.input.clone();
@@ -78,20 +83,20 @@ fn test_dither(args: &Args, format_str: &str, buf: ImageBuffer<Rgba<u8>, Vec<u8>
         let mut path = args.input.clone();
         let input_stem = path.file_stem().unwrap().to_string_lossy();
         let dither_str = match dith {
-            Raw => "".to_string(),
-            Bayer2 => format!("_bayer-2-{}", 64),
-            Bayer4 => format!("_bayer-4-{}", 64),
-            Bayer8 => format!("_bayer-8-{}", 64),
+            Raw     => format!("_bayer-0-{}", 64),
+            Bayer2  => format!("_bayer-2-{}", 64),
+            Bayer4  => format!("_bayer-4-{}", 64),
+            Bayer8  => format!("_bayer-8-{}", 64),
             Bayer16 => format!("_bayer16-{}", 64)
         };
         let file = format!(
-            "{}_Dit_kanagwa{}.{}",
+            "{}_Dit_atomone{}.{}",
             input_stem,
             dither_str,
             format_str
         );
         path.set_file_name(file);
-        let processed = process_image(buf.clone(), KANAGAWA.to_vec(), *dith, 32.0);
+        let processed = process_image(buf.clone(), ATOMONE.to_vec(), *dith, 32.0);
         processed.save(path.clone()).expect("Couldn't save file");
         let end = SystemTime::now();
         println!("    [{:.1?}]{:>12}   {}", end.duration_since(start).unwrap(), "Saved at:", path.display());
@@ -113,13 +118,13 @@ fn test_amplitude(args: &Args, format_str: &str, buf: ImageBuffer<Rgba<u8>, Vec<
             _ => ""
         };
         let file = format!(
-            "{}_Amp_kanagwa_bayer-8-{}.{}",
+            "{}_Amp_atomone_bayer-8-{}.{}",
             input_stem,
             ampl_str,
             format_str
         );
         path.set_file_name(file);
-        let processed = process_image(buf.clone(), KANAGAWA.to_vec(), Bayer8, *ampl);
+        let processed = process_image(buf.clone(), ATOMONE.to_vec(), Bayer8, *ampl);
         processed.save(path.clone()).expect("Couldn't save file");
         let end = SystemTime::now();
         println!("    [{:.1?}]{:>12}   {}", end.duration_since(start).unwrap(), "Saved at:", path.display());

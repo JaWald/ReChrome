@@ -11,7 +11,6 @@ use std::time::SystemTime;
 use clap::Parser;
 use processor::*;
 use cli::*;
-use crate::cli::Palette::Nord;
 use crate::config::*;
 use crate::error::AppError;
 use crate::printer::*;
@@ -79,7 +78,8 @@ fn run() -> Result<(), AppError> {
 
     println!(" \x1b[1mImage saved at:\x1b[0m\n   {}", &config.output);
     print_dashes(config.size);
-    print_palette("palettes\\nord.txt");
+    //_print_palette("palettes/synthwave.txt");
+    // --------------------------------------------------------------------------------------------
 
     Ok(())
 }

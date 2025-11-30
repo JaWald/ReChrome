@@ -45,13 +45,17 @@ pub struct Args {
 
 #[derive(Debug, Clone, ValueEnum)]
 pub enum Palette {
-    Gruvbox,
+    Atomone,
+    Catppuccin,
+    Darcula,
     Everforest,
+    Gruvbox,
     Kanagawa,
-    Molokai,
+    Monokai,
     Nord,
     Papercut,
-    Solarized
+    Solarized,
+    Synthwave
 }
 
 #[derive(Debug, Clone, ValueEnum, Copy)]
