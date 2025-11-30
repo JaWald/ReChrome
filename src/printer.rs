@@ -60,7 +60,7 @@ pub fn print_preview(img: DynamicImage, rows: u32) {
 }
 
 // for palette conversion in development
-pub fn _print_palette(str: &String) {
+pub fn print_palette(str: &str) {
     let content = std::fs::read_to_string(str).expect("Should have been able to read file");
 
     let mut count = 0;

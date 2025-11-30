@@ -49,6 +49,7 @@ pub enum Palette {
     Everforest,
     Kanagawa,
     Molokai,
+    Nord,
     Papercut,
     Solarized
 }

@@ -28,6 +28,7 @@ pub fn from_args(args: &Args) -> Result<Config, AppError> {
                 Gruvbox => GRUVBOX.to_vec(),
                 Kanagawa => KANAGAWA.to_vec(),
                 Molokai => MOLOKAI.to_vec(),
+                Nord => NORD.to_vec(),
                 Papercut => PAPERCUT.to_vec(),
                 Solarized => SOLARIZED.to_vec()
             }
@@ -41,6 +42,7 @@ pub fn from_args(args: &Args) -> Result<Config, AppError> {
                 Gruvbox => "Gruvbox",
                 Kanagawa => "Kanagawa",
                 Molokai => "Molokai",
+                Nord =>    "Nord",
                 Papercut => "Papercut",
                 Solarized => "Solarized"
             }
@@ -92,6 +94,7 @@ pub fn create_output_path(args: &Args, palette_name: &str, ampl: f32, dither: Di
                 "Gruvbox"    => "gruvbox",
                 "Kanagawa"   => "kanagwa",
                 "Molokai"    => "molokai",
+                "Nord"       => "nord___",
                 "Papercut"   => "paprcut",
                 "Solarized"  => "solrizd",
                 &_ => "",
