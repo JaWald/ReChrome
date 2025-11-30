@@ -12,20 +12,21 @@ It loads an image from the specified input path, applies dithering, performs pal
 
 ## Help
 ```c++
-Usage: rechrome.exe [OPTIONS] --palette <PALETTE> --input <INPUT>
+Usage: rechrome.exe [OPTIONS] --input <INPUT>
 
 Options:
-  -p, --palette <PALETTE>  Color Palette    [possible values: gray, gruvbox, everforest, kanagawa, molokai, papercut, solarized]
-  -d, --dither <DITHER>    Dithering Modes  [default: bayer16] [possible values: none, bayer2, bayer4, bayer8, bayer16]
-  -b, --bayer <BAYER>      Bayer amplitude  [default: bayerX * 4]
-
-  -i, --input <INPUT>      Input file path
-  -f, --format <FORMAT>    Output file type [default: png] [possible values: png, jpg, jpeg]
+  -p, --palette <PALETTE>  Color Palette    [possible values: atomone, catppuccin, darcula, everforest, gruvbox, kanagawa, monokai, nord, papercut, solarized, synthwave]
+  -d, --dither <DITHER>    Dithering Modes  [default: bayer8] [possible values: raw, bayer2, bayer4, bayer8, bayer16]
+  -a, --ampl <AMPL>        Bayer Amplitude  [default: bayerX * 4, <256] 
+                           
+  -i, --input <INPUT>      Input file path  
+  -f, --format <FORMAT>    Output file type [default: jpg] [possible values: png, jpg, jpeg]
   -o, --output <OUTPUT>    Output file path [default: <input>_<palette>_<dither>.<format>]
-
-  -s, --showcase <SIZE>    Show in-terminal (recommended value: <40)
-  -r, --runtime            Show timing measurements
-
+                           
+  -s, --showcase <SIZE>    Show in-terminal (recommended value: <= 20)
+  -r, --runtime            Show runtime performance
+                           
+  -t, --test <TEST>        Test arguments   [possible values: none, palette, dither, amplitude, all]
   -h, --help               Print help
   -V, --version            Print version
 ```
