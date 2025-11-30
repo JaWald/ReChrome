@@ -7,7 +7,7 @@ use crate::error::AppError;
 use crate::printer::print_dashes;
 use crate::processor::process_image;
 
-const PALETTE_ARR: [&[[u8; 3]]; 11] = [ATOMONE, CATPPUCCIN, DARCULA, EVERFOREST, GRUVBOX, KANAGAWA, MONOKAI, NORD, PAPERCUT, SOLARIZED, SYNTHWAVE];
+const PALETTE_ARR: [&[[u8; 3]]; 11] = [ATOMONE, CATPPUCCIN, DARCULA, EVERFOREST, GRUVBOX, KANAGAWA, MONOKAI, NORD, PAPERCOLOR, SOLARIZED, SYNTHWAVE];
 const DITHER_ARR: [Dither; 5] = [Raw, Bayer2, Bayer4, Bayer8, Bayer16];
 const AMPL_ARR: [f32; 5]= [2.0, 16.0, 32.0, 64.0, 128.0];
 
@@ -55,7 +55,7 @@ fn test_palette(args: &Args, format_str: &str, buf: ImageBuffer<Rgba<u8>, Vec<u8
             &KANAGAWA   => "kanagwa",
             &MONOKAI    => "monokai",
             &NORD       => "nord___",
-            &PAPERCUT   => "paprcut",
+            &PAPERCOLOR => "paprcol",
             &SOLARIZED  => "solarizd",
             &SYNTHWAVE  => "synthwve",
             _ => "",

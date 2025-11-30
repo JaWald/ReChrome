@@ -53,7 +53,7 @@ pub enum Palette {
     Kanagawa,
     Monokai,
     Nord,
-    Papercut,
+    Papercolor,
     Solarized,
     Synthwave
 }

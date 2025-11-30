@@ -155,7 +155,7 @@ pub const NORD: &'static [[u8; 3]] =
     ];
 
 // https://github.com/NLKNguyen/papercolor-theme
-pub const PAPERCUT: &'static [[u8; 3]] =
+pub const PAPERCOLOR: &'static [[u8; 3]] =
     &[[238, 238, 238], [175,   0,   0], [  0, 135,   0], [ 95, 135,   0],
         [  0, 135, 175], [135, 135, 135], [  0,  95, 135], [ 68,  68,  68],
         [188, 188, 188], [215,   0,   0], [215,   0, 135], [135,   0, 175],

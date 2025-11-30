@@ -32,9 +32,9 @@ pub fn from_args(args: &Args) -> Result<Config, AppError> {
                 Kanagawa    => KANAGAWA.to_vec(),
                 Monokai     => MONOKAI.to_vec(),
                 Nord        => NORD.to_vec(),
-                Papercut    => PAPERCUT.to_vec(),
+                Papercolor  => PAPERCOLOR.to_vec(),
                 Solarized   => SOLARIZED.to_vec(),
-                Synthwave    => SYNTHWAVE.to_vec()
+                Synthwave   => SYNTHWAVE.to_vec()
             }
         }
         None => vec![]
@@ -50,7 +50,7 @@ pub fn from_args(args: &Args) -> Result<Config, AppError> {
                 Kanagawa    => "Kanagawa",
                 Monokai     => "Monokai",
                 Nord        => "Nord",
-                Papercut    => "Papercut",
+                Papercolor  => "PaperColor",
                 Solarized   => "Solarized",
                 Synthwave   => "Synthwave"
             }
@@ -106,7 +106,7 @@ pub fn create_output_path(args: &Args, palette_name: &str, ampl: f32, dither: Di
                 "Kanagawa"      => "kanagwa",
                 "Monokai"       => "monokai",
                 "Nord"          => "nord___",
-                "Papercut"      => "paprcut",
+                "PaperColor"    => "paprcol",
                 "Solarized"     => "solarizd",
                 "Synthwave"     => "synthwve",
                 &_ => "",
