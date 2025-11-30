@@ -1,22 +1,20 @@
 // ------------------------------------------------------------ //
-// https://github.com/UtkarshVerma/molokai.nvim
-// (duplicates removed)
+// https://www.nordtheme.com/docs/colors-and-palettes
 // ------------------------------------------------------------ //
-1b1d1e
-f8f8f2
-808080
-464741
-7e8e91
-819aff
-66d9ef
-f92672
-ae81ff
-fd971f
-e6db74
-a6e22e
-00ff87
-ff4a44
-cd9731
-6796e6
-b267e6
+2e3440
+3b4252
+434c5e
+4c566a
+d8dee9
+e5e9f0
+eceff4
+8fbcbb
+88c0d0
+81a1c1
+5e81ac
+bf616a
+d08770
+ebcb8b
+a3be8c
+b48ead
 // ------------------------------------------------------------ //

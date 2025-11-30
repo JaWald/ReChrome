@@ -60,10 +60,11 @@ pub fn print_preview(img: DynamicImage, rows: u32) {
 }
 
 // for palette conversion in development
-pub fn _print_palette(str: &String) {
+pub fn _print_palette(str: &str) {
     let content = std::fs::read_to_string(str).expect("Should have been able to read file");
 
     let mut count = 0;
+    print!("&[");
     for l in content.lines() {
         if l.starts_with("//") || l.is_empty() { continue }
         let r = u8::from_str_radix(&l[0..2], 16).expect("Should have been able to parse red");
@@ -75,6 +76,7 @@ pub fn _print_palette(str: &String) {
         }
         count += 1;
     }
+    println!("];");
     println!();
 }
 

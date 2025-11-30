@@ -24,12 +24,17 @@ pub fn from_args(args: &Args) -> Result<Config, AppError> {
     let palette = match &args.palette {
         Some(pal) => {
             match pal {
-                Everforest => EVERFOREST.to_vec(),
-                Gruvbox => GRUVBOX.to_vec(),
-                Kanagawa => KANAGAWA.to_vec(),
-                Molokai => MOLOKAI.to_vec(),
-                Papercut => PAPERCUT.to_vec(),
-                Solarized => SOLARIZED.to_vec()
+                Atomone     => ATOMONE.to_vec(),
+                Catppuccin   => CATPPUCCIN.to_vec(),
+                Darcula     => DARCULA.to_vec(),
+                Everforest  => EVERFOREST.to_vec(),
+                Gruvbox     => GRUVBOX.to_vec(),
+                Kanagawa    => KANAGAWA.to_vec(),
+                Monokai     => MONOKAI.to_vec(),
+                Nord        => NORD.to_vec(),
+                Papercut    => PAPERCUT.to_vec(),
+                Solarized   => SOLARIZED.to_vec(),
+                Synthwave    => SYNTHWAVE.to_vec()
             }
         }
         None => vec![]
@@ -37,22 +42,27 @@ pub fn from_args(args: &Args) -> Result<Config, AppError> {
     let palette_name = match &args.palette {
         Some(pal) => {
             match pal {
-                Everforest => "Everforest",
-                Gruvbox => "Gruvbox",
-                Kanagawa => "Kanagawa",
-                Molokai => "Molokai",
-                Papercut => "Papercut",
-                Solarized => "Solarized"
+                Atomone     => "AtomOne",
+                Catppuccin  => "Catppuccin",
+                Darcula     => "Darcula",
+                Everforest  => "Everforest",
+                Gruvbox     => "Gruvbox",
+                Kanagawa    => "Kanagawa",
+                Monokai     => "Monokai",
+                Nord        => "Nord",
+                Papercut    => "Papercut",
+                Solarized   => "Solarized",
+                Synthwave   => "Synthwave"
             }
         }
         None => ""
     }.to_string();
     let dither = args.dither;
     let ideal_ampl = match dither {
-        Raw => 0,
-        Bayer2 => 8,
-        Bayer4 => 16,
-        Bayer8 => 32,
+        Raw     => 0,
+        Bayer2  => 8,
+        Bayer4  => 16,
+        Bayer8  => 32,
         Bayer16 => 64
     };
     let ampl = args.ampl.unwrap_or_else(|| ideal_ampl) as f32;
@@ -88,12 +98,17 @@ pub fn create_output_path(args: &Args, palette_name: &str, ampl: f32, dither: Di
                 .ok_or_else(|| AppError::InputFileDoesNotExist(args.input.clone()))?
                 .to_string_lossy();
             let palette_str = match palette_name {
-                "Everforest" => "evrfrst",
-                "Gruvbox"    => "gruvbox",
-                "Kanagawa"   => "kanagwa",
-                "Molokai"    => "molokai",
-                "Papercut"   => "paprcut",
-                "Solarized"  => "solrizd",
+                "AtomOne"       => "atomone",
+                "Catppuccin"    => "catppuc",
+                "Darcula"       => "darcula",
+                "Everforest"    => "everforst",
+                "Gruvbox"       => "gruvbox",
+                "Kanagawa"      => "kanagwa",
+                "Monokai"       => "monokai",
+                "Nord"          => "nord___",
+                "Papercut"      => "paprcut",
+                "Solarized"     => "solarizd",
+                "Synthwave"     => "synthwve",
                 &_ => "",
             };
             let ampl_str = match ampl {
