@@ -100,7 +100,7 @@ pub fn create_output_path(args: &Args, palette_name: &str, ampl: f32, dither: Di
             let palette_str = match palette_name {
                 "AtomOne"       => "atomone",
                 "Catppuccin"    => "catppuc",
-                "Darcula"       => "darcula",
+                "Darcula"       => "darcula_",
                 "Everforest"    => "everforst",
                 "Gruvbox"       => "gruvbox",
                 "Kanagawa"      => "kanagwa",
@@ -108,7 +108,7 @@ pub fn create_output_path(args: &Args, palette_name: &str, ampl: f32, dither: Di
                 "Nord"          => "nord___",
                 "PaperColor"    => "paprcol",
                 "Solarized"     => "solarizd",
-                "Synthwave"     => "synthwve",
+                "Synthwave"     => "synthwv",
                 &_ => "",
             };
             let ampl_str = if ampl < 10.0 {

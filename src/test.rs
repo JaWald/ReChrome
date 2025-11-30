@@ -49,7 +49,7 @@ fn test_palette(args: &Args, format_str: &str, buf: ImageBuffer<Rgba<u8>, Vec<u8
         let palette_str = match pal {
             &ATOMONE    => "atomone",
             &CATPPUCCIN => "catppuc",
-            &DARCULA    => "darcula",
+            &DARCULA    => "darcula_",
             &EVERFOREST => "everforst",
             &GRUVBOX    => "gruvbox",
             &KANAGAWA   => "kanagwa",
@@ -57,7 +57,7 @@ fn test_palette(args: &Args, format_str: &str, buf: ImageBuffer<Rgba<u8>, Vec<u8
             &NORD       => "nord___",
             &PAPERCOLOR => "paprcol",
             &SOLARIZED  => "solarizd",
-            &SYNTHWAVE  => "synthwve",
+            &SYNTHWAVE  => "synthwv",
             _ => "",
         };
         let mut path = args.input.clone();
