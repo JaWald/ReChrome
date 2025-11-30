@@ -4,18 +4,20 @@ It applies Bayer ordered dithering to reduce banding, then maps each pixel to th
 
 It loads an image from the specified input path, applies dithering, performs palette quantization, and writes the processed output file in the desired format.
 ## Palettes
-|[Original](https://unsplash.com/de/fotos/ein-schwarzer-hintergrund-mit-einem-rosa-und-blauen-design-L8fXJgMk5jc)|[Everforest](https://github.com/sainnhe/everforest)|[Gruvbox](https://github.com/morhetz/gruvbox)|[Kanagawa](https://github.com/rebelot/kanagawa.nvim)|
+|[Original](https://pixabay.com/photos/goldfish-aquarium-fish-tank-pets-8012081/)|[Atom One](https://github.com/Th3Whit3Wolf/one-nvim/tree/main)|[Catppuccin](https://catppuccin.com/palette/)|[Darcula](https://github.com/doums/darcula)|
 |:--:|                                 :---:                                     |                    :---:                    |                      :---:                         |
-|<img src="images/color.jpg" width="300" alt="Original">|<img src="images/color_everforest_bayer16-64.jpg" width="300" alt="Everforest">|<img src="images/color_gruvbox_bayer16-64.jpg" width="300" alt="Gruvbox">|<img src="images/color_kanagawa_bayer16-64.jpg" width="300" alt="Kanagawa">|
-||[Molokai](https://github.com/UtkarshVerma/molokai.nvim)|[Papercut](https://github.com/NLKNguyen/papercolor-theme)|[Solarized](https://github.com/solarized/xresources)|
-||<img src="images/color_molokai_bayer16-64.jpg" width="300" alt="Molokai">|<img src="images/color_papercut_bayer16-64.jpg" width="300" alt="Papercut">|<img src="images/color_solarized_bayer16-64.jpg" width="300" alt="Solarized">|
+|<img src="images/showcase.jpg" width="300" alt="Original">|<img src="images/showcase_Pal_atomone.jpg" width="300" alt="Atom One">|<img src="images/showcase_Pal_catppuc.jpg" width="300" alt="Catppuccin">|<img src="images/showcase_Pal_darcula.jpg" width="300" alt="Darcula">|
+|[Everforest](https://github.com/sainnhe/everforest/blob/master/palette.md)|[Gruvbox](https://github.com/morhetz/gruvbox)|[Kanagawa](https://github.com/rebelot/kanagawa.nvim)|[Monokai](https://github.com/UtkarshVerma/molokai.nvim)|
+|<img src="images/showcase_Pal_everforst.jpg" width="300" alt="Everforest">|<img src="images/showcase_Pal_gruvbox.jpg" width="300" alt="Gruvbox">|<img src="images/showcase_Pal_kanagwa.jpg" width="300" alt="Kanagawa">|<img src="images/showcase_Pal_monokai.jpg" width="300" alt="Monokai">|
+|[Nord](https://www.nordtheme.com/docs/colors-and-palettes)|[PaperColor](https://github.com/NLKNguyen/papercolor-theme)|[Solarized](https://github.com/solarized/xresources)|[Synthwave](https://github.com/robb0wen/synthwave-vscode)|
+|<img src="images/showcase_Pal_nord___.jpg" width="300" alt="Nord">|<img src="images/showcase_Pal_paprcut.jpg" width="300" alt="Papercut">|<img src="images/showcase_Pal_solarizd.jpg" width="300" alt="Solarized">|<img src="images/showcase_Pal_synthwve.jpg" width="300" alt="Synthwave">|
 
 ## Help
 ```c++
 Usage: rechrome.exe [OPTIONS] --input <INPUT>
 
 Options:
-  -p, --palette <PALETTE>  Color Palette    [possible values: atomone, catppuccin, darcula, everforest, gruvbox, kanagawa, monokai, nord, papercut, solarized, synthwave]
+  -p, --palette <PALETTE>  Color Palette    [possible values: atomone, catppuccin, darcula, everforest, gruvbox, kanagawa, monokai, nord, papercolor, solarized, synthwave]
   -d, --dither <DITHER>    Dithering Modes  [default: bayer8] [possible values: raw, bayer2, bayer4, bayer8, bayer16]
   -a, --ampl <AMPL>        Bayer Amplitude  [default: bayerX * 4, <256] 
                            
