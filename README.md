@@ -46,9 +46,9 @@ When converting low-res images, you might see a lot of noise. Using a lower baye
 >` <correctDir>.\rechrome.exe -i "C:\Users\<user>\Downloads\goldfish.jpg" -t palette`
 
 >**Conversion with preview in-terminal** (examples below)\
->` <correctDir>.\rechrome.exe -i "C:\Users\<user>\Downloads\goldfish.jpg" -p atomone -s 22`\
+>` <correctDir>.\rechrome.exe -i "C:\Users\<user>\Downloads\goldfish.jpg" -p atomone -s 22`
 >
-> <img src="images/preview_atomone.jpg" width="300" alt="Preview_AtomOne"> <img src="images/preview_gruvbox.jpg" width="300" alt="Preview_Gruvbox"> <img src="images/preview_synthwave.jpg" width="300" alt="Preview_Synthwave">
+> <img src="images/preview_atomone.jpg" width="200" alt="Preview_AtomOne"> <img src="images/preview_gruvbox.jpg" width="200" alt="Preview_Gruvbox"> <img src="images/preview_synthwave.jpg" width="200" alt="Preview_Synthwave">
 
 
 ## 📦Install
