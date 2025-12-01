@@ -59,3 +59,18 @@ To circumvent this, please follow these steps:
 - Create a folder in a root directory
 - Exclude said folder from Windows Defender
 - Unzip ReChrome to that folder
+
+### Alternative: Build from Source
+
+Alternatively, you can always compile ReChrome yourself.
+
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/JaWald/ReChrome.git
+    cd ReChrome
+    ```
+2.  **Compile the optimized binary:**
+    ```bash
+    cargo build --release
+    ```
+3.  The executable file is created in the `./target/release/` directory.
