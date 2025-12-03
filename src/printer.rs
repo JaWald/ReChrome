@@ -16,7 +16,7 @@ pub fn print_selection(config: &Config, output: &str) {
         Dither::Bayer4 |
         Dither::Bayer8 |
         Dither::Bayer16 => println!("   \x1b[33;1mDither:\x1b[0m\x1b[1m   {:?} - {:.0}\x1b[0m", config.dither, config.ampl),
-        Dither::Raw => println!("   \x1b[33;1mDither:\x1b[0m\x1b[1m   {:?}\x1b[0m", config.dither)
+        Dither::Raw     => println!("   \x1b[33;1mDither:\x1b[0m\x1b[1m   {:?}\x1b[0m", config.dither)
     }
     println!("\n   \x1b[32;1mInput:\x1b[0m    {}", config.input);
     println!("   \x1b[33;1mOutput:\x1b[0m   {}", output);
@@ -31,10 +31,10 @@ pub fn print_selection(config: &Config, output: &str) {
 
 pub fn print_measurements(size: u32, load: Duration, proc: Duration, save: Duration) {
     println!(" \x1b[1mPerformance:\x1b[0m");
-    println!("   \x1b[32;1mTotal:\x1b[0m \x1b[1m  {:>8.1?}\x1b[0m", load + proc + save);
-    println!("   \x1b[33;1mLoad:\x1b[0m    {:>8.1?}", load);
-    println!("   \x1b[33;1mProcess:\x1b[0m {:>8.1?}", proc);
-    println!("   \x1b[33;1mSave:\x1b[0m    {:>8.1?}", save);
+    println!("   \x1b[32;1mTotal:\x1b[0m \x1b[1m  {:>6.2?}s\x1b[0m", load.as_secs_f32() + proc.as_secs_f32() + save.as_secs_f32());
+    println!("   \x1b[33;1mLoad:\x1b[0m    {:>6.2?}s", load.as_secs_f32());
+    println!("   \x1b[33;1mProcess:\x1b[0m {:>6.2?}s", proc.as_secs_f32());
+    println!("   \x1b[33;1mSave:\x1b[0m    {:>6.2?}s", save.as_secs_f32());
     print_dashes(size);
 }
 
@@ -61,6 +61,7 @@ pub fn print_preview(img: DynamicImage, rows: u32) {
 
 // for palette conversion in development
 pub fn _print_palette(str: &str) {
+    println!("Palette: {}", str);
     let content = std::fs::read_to_string(str).expect("Should have been able to read file");
 
     let mut count = 0;
@@ -70,12 +71,11 @@ pub fn _print_palette(str: &str) {
         let r = u8::from_str_radix(&l[0..2], 16).expect("Should have been able to parse red");
         let g = u8::from_str_radix(&l[2..4], 16).expect("Should have been able to parse green");
         let b = u8::from_str_radix(&l[4..6], 16).expect("Should have been able to parse blue");
-        print!("[{:>3}, {:>3}, {:>3}], ", r, g, b);
-        if count % 4 == 3 {
-            println!();
-        }
+        print!("[{:>3}.0, {:>3}.0, {:>3}.0], ", r, g, b);
+        if count % 4 == 3 { println!(); }
         count += 1;
     }
+    if count % 4 != 0 { println!(); }
     println!("];");
     println!();
 }

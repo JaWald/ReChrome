@@ -4,7 +4,7 @@ use crate::cli::{Dither};
 use crate::cli::Dither::*;
 use crate::data;
 
-pub fn process_image(mut buf: RgbaImage, palette: Vec<[u8; 3]>, dither: Dither, amplitude: f32) -> DynamicImage {
+pub fn process_image(mut buf: RgbaImage, palette: Vec<[f32; 3]>, dither: Dither, amplitude: f32) -> DynamicImage {
     buf.par_enumerate_pixels_mut().for_each(|(x, y, pix)| {
         let dither_shift = match dither {
             Raw => 0.0,
@@ -20,18 +20,17 @@ pub fn process_image(mut buf: RgbaImage, palette: Vec<[u8; 3]>, dither: Dither, 
         let mut min_diff = f32::MAX;
         let mut best = palette[0];
         for pal in &palette {
-            let dr = r - pal[0] as f32;
-            let dg = g - pal[1] as f32;
-            let db = b - pal[2] as f32;
-            let diff = dr * dr + dg * dg + db * db;
+            let dr = r - pal[0];
+            let dg = g - pal[1];
+            let db = b - pal[2];
+            let diff = dr*dr + dg*dg + db*db;
 
             if diff < min_diff {
                 best = *pal;
                 min_diff = diff;
-
             }
         }
-        *pix = Rgba([best[0], best[1], best[2], 0xFF]);
+        *pix = Rgba([best[0] as u8, best[1] as u8, best[2] as u8, 0xFF]);
     });
     DynamicImage::ImageRgba8(buf)
 }

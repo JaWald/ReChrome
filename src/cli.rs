@@ -23,7 +23,7 @@ pub struct Args {
     pub input: PathBuf,
 
     /// Output file type
-    #[arg(short, long, value_enum, default_value = "jpg")]
+    #[arg(short, long, value_enum, default_value = "png")]
     pub format: Format,
 
     /// Output file path

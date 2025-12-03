@@ -10,7 +10,7 @@ pub struct Config {
     pub output: String,
     //pub format: String,
 
-    pub palette: Vec<[u8; 3]>,
+    pub palette: Vec<[f32; 3]>,
     pub palette_name: String,
     pub dither: Dither,
     pub ampl: f32,

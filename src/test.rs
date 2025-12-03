@@ -1,51 +1,54 @@
-use std::time::SystemTime;
+use std::time::{Duration, SystemTime};
 use image::{ImageBuffer, Rgba};
 use crate::cli::{Args, Dither, TestType};
 use crate::cli::Dither::*;
 use crate::data::*;
 use crate::error::AppError;
-use crate::printer::print_dashes;
+use crate::printer::{print_dashes, print_measurements};
 use crate::processor::process_image;
 
-const PALETTE_ARR: [&[[u8; 3]]; 11] = [ATOMONE, CATPPUCCIN, DARCULA, EVERFOREST, GRUVBOX, KANAGAWA, MONOKAI, NORD, PAPERCOLOR, SOLARIZED, SYNTHWAVE];
+const PALETTE_ARR: [&[[f32; 3]]; 11] = [ATOMONE, CATPPUCCIN, DARCULA, EVERFOREST, GRUVBOX, KANAGAWA, MONOKAI, NORD, PAPERCOLOR, SOLARIZED, SYNTHWAVE];
 const DITHER_ARR: [Dither; 5] = [Raw, Bayer2, Bayer4, Bayer8, Bayer16];
 const AMPL_ARR: [f32; 5]= [2.0, 16.0, 32.0, 64.0, 128.0];
 
 pub fn test(args: &Args, test: &TestType, size: &u32) -> Result<(), AppError> {
     let total_start = SystemTime::now();
-    let format_str = "jpg";
+    let mut runtime :[Duration; 3] = [Duration::new(0, 0), Duration::new(0, 0), Duration::new(0, 0)];
+
+    let format_str = "png";
     let img = image::open(&args.input)?;
     let buf = img.into_rgba8();
     match test {
         TestType::None => (),
         TestType::Palette => {
-            test_palette(args, format_str, buf.clone());
+            runtime = test_palette(args, format_str, buf.clone(), runtime);
         },
         TestType::Dither => {
-            test_dither(args, format_str, buf.clone());
+            runtime = test_dither(args, format_str, buf.clone(), runtime);
         },
         TestType::Amplitude => {
-            test_amplitude(args, format_str, buf.clone());
+            runtime = test_amplitude(args, format_str, buf.clone(), runtime);
         },
         TestType::All => {
-
-            test_palette(args, format_str, buf.clone());
+            runtime = test_palette(args, format_str, buf.clone(), runtime);
             println!();
-            test_dither(args, format_str, buf.clone());
+            runtime = test_dither(args, format_str, buf.clone(), runtime);
             println!();
-            test_amplitude(args, format_str, buf.clone());
+            runtime = test_amplitude(args, format_str, buf.clone(), runtime);
         },
     }
     let total_end = SystemTime::now();
-    println!("     \x1b[1m[{:.2}s]   {}", total_end.duration_since(total_start)?.as_secs_f32(), "Total");
+
     print_dashes(*size);
+    runtime[0] = total_end.duration_since(total_start)? - runtime[1] - runtime[2];
+    print_measurements(*size, runtime[0], runtime[1], runtime[2]);
     Ok(())
 }
 
-fn test_palette(args: &Args, format_str: &str, buf: ImageBuffer<Rgba<u8>, Vec<u8>>) {
+fn test_palette(args: &Args, format_str: &str, buf: ImageBuffer<Rgba<u8>, Vec<u8>>, mut runtime: [Duration; 3]) -> [Duration; 3] {
     println!(" \x1b[32;1mTEST: Palette\x1b[0m");
     for pal in PALETTE_ARR.iter() {
-        let start = SystemTime::now();
+        let proc_start = SystemTime::now();
         let palette_str = match pal {
             &ATOMONE    => "atomone",
             &CATPPUCCIN => "catppuc",
@@ -70,16 +73,22 @@ fn test_palette(args: &Args, format_str: &str, buf: ImageBuffer<Rgba<u8>, Vec<u8
         );
         path.set_file_name(file);
         let processed = process_image(buf.clone(), pal.to_vec(), Bayer16, 64.0);
+        let proc_end = SystemTime::now();
         processed.save(path.clone()).expect("Couldn't save file");
-        let end = SystemTime::now();
-        println!("    [{:.1?}]{:>12}   {}", end.duration_since(start).unwrap(), "Saved at:", path.display());
+        let save_end = SystemTime::now();
+
+        let save_str = format!( "Saved at  {}", path.display());
+        println!("   [{:>7.1?}]   {}", save_end.duration_since(proc_start).unwrap(), save_str);
+        runtime[1] += proc_end.duration_since(proc_start).expect("Should have been able to use time");
+        runtime[2] += save_end.duration_since(proc_end).expect("Should have been able to use time");
     }
+    runtime
 }
 
-fn test_dither(args: &Args, format_str: &str, buf: ImageBuffer<Rgba<u8>, Vec<u8>>) {
+fn test_dither(args: &Args, format_str: &str, buf: ImageBuffer<Rgba<u8>, Vec<u8>>, mut runtime: [Duration; 3]) -> [Duration; 3]  {
     println!(" \x1b[32;1mTEST: Dithering\x1b[0m");
     for dith in DITHER_ARR.iter() {
-        let start = SystemTime::now();
+        let proc_start = SystemTime::now();
         let mut path = args.input.clone();
         let input_stem = path.file_stem().unwrap().to_string_lossy();
         let dither_str = match dith {
@@ -97,16 +106,22 @@ fn test_dither(args: &Args, format_str: &str, buf: ImageBuffer<Rgba<u8>, Vec<u8>
         );
         path.set_file_name(file);
         let processed = process_image(buf.clone(), ATOMONE.to_vec(), *dith, 32.0);
+        let proc_end = SystemTime::now();
         processed.save(path.clone()).expect("Couldn't save file");
-        let end = SystemTime::now();
-        println!("    [{:.1?}]{:>12}   {}", end.duration_since(start).unwrap(), "Saved at:", path.display());
+        let save_end = SystemTime::now();
+
+        let save_str = format!( "Saved at  {}", path.display());
+        println!("   [{:>7.1?}]   {}", save_end.duration_since(proc_start).unwrap(), save_str);
+        runtime[1] += proc_end.duration_since(proc_start).expect("Should have been able to use time");
+        runtime[2] += save_end.duration_since(proc_end).expect("Should have been able to use time");
     }
+    runtime
 }
 
-fn test_amplitude(args: &Args, format_str: &str, buf: ImageBuffer<Rgba<u8>, Vec<u8>>) {
+fn test_amplitude(args: &Args, format_str: &str, buf: ImageBuffer<Rgba<u8>, Vec<u8>>, mut runtime: [Duration; 3]) -> [Duration; 3]  {
     println!(" \x1b[32;1mTEST: Bayer Amplitude\x1b[0m");
     for ampl in AMPL_ARR.iter() {
-        let start = SystemTime::now();
+        let proc_start = SystemTime::now();
         let mut path = args.input.clone();
         let input_stem = path.file_stem().unwrap().to_string_lossy();
         let ampl_str = match ampl {
@@ -125,8 +140,14 @@ fn test_amplitude(args: &Args, format_str: &str, buf: ImageBuffer<Rgba<u8>, Vec<
         );
         path.set_file_name(file);
         let processed = process_image(buf.clone(), ATOMONE.to_vec(), Bayer8, *ampl);
+        let proc_end = SystemTime::now();
         processed.save(path.clone()).expect("Couldn't save file");
-        let end = SystemTime::now();
-        println!("    [{:.1?}]{:>12}   {}", end.duration_since(start).unwrap(), "Saved at:", path.display());
+        let save_end = SystemTime::now();
+
+        let save_str = format!( "Saved at  {}", path.display());
+        println!("   [{:>7.1?}]   {}", save_end.duration_since(proc_start).unwrap(), save_str);
+        runtime[1] += proc_end.duration_since(proc_start).expect("Should have been able to use time");
+        runtime[2] += save_end.duration_since(proc_end).expect("Should have been able to use time");
     }
+    runtime
 }
