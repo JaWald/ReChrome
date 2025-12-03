@@ -33,10 +33,10 @@ pub fn process_image(mut buf: RgbaImage, palette: Vec<[f32; 3]>, dither: Dither,
     DynamicImage::ImageRgba8(buf)
 }
 
-pub fn save_image(processed: &DynamicImage, output: &String, format: &Format) -> Result<(), AppError> {
+pub fn save_image(processed: &DynamicImage, output: &String, format: &Format, quality: u8) -> Result<(), AppError> {
     let width = processed.width() as u16;
     let height = processed.height() as u16;
-    let encoder = Encoder::new_file(output, 90).unwrap();
+    let encoder = Encoder::new_file(output, quality).unwrap();
     match format {
         Format::Png =>  processed.save(output)?,
         Format::Jpeg => {

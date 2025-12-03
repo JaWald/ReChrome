@@ -69,7 +69,7 @@ fn run() -> Result<(), AppError> {
 
     // ------------------------------------------ OUTPUT ------------------------------------------
     let start_save = SystemTime::now();
-    save_image(&processed, &config.output, &config.format)?;
+    save_image(&processed, &config.output, &config.format, config.quality)?;
     let end_save = SystemTime::now();
     let dur_save = end_save.duration_since(start_save)?;
 

@@ -4,7 +4,7 @@
 ### Performed test
 -t all\
 input: 4k jpg\
-output: 4k jpg
+output: 4k jpeg at 100% quality
 -----------------------------------------------
 v1.0
 

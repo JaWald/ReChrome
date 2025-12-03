@@ -54,7 +54,7 @@ fn test_palette(args: &Args, buf: ImageBuffer<Rgba<u8>, Vec<u8>>, mut runtime: [
         let processed = process_image(buf.clone(), pal.colors.to_vec(), dither, ampl);
         let proc_end = SystemTime::now();
 
-        save_image(&processed, &path, &args.format)?;
+        save_image(&processed, &path, &args.format, args.quality.unwrap_or_else(|| 100u8))?;
         let save_end = SystemTime::now();
 
         println!("   [{:>7.1?}]   {}", save_end.duration_since(proc_start)?, format!( "Saved at  {}", path));
@@ -72,7 +72,7 @@ fn test_dither(args: &Args, buf: ImageBuffer<Rgba<u8>, Vec<u8>>, mut runtime: [D
         let path = create_output_path(&args, "D", &ATOMONE, ampl, *dith, &args.format)?;
         let processed = process_image(buf.clone(), ATOMONE.colors.to_vec(), *dith, 32.0);
         let proc_end = SystemTime::now();
-        save_image(&processed, &path, &args.format)?;
+        save_image(&processed, &path, &args.format, args.quality.unwrap_or_else(|| 100u8))?;
         let save_end = SystemTime::now();
 
         println!("   [{:>7.1?}]   {}", save_end.duration_since(proc_start)?, format!( "Saved at  {}", path));
@@ -90,7 +90,7 @@ fn test_amplitude(args: &Args, buf: ImageBuffer<Rgba<u8>, Vec<u8>>, mut runtime:
         let path = create_output_path(&args, "A", &ATOMONE, *ampl, dither, &args.format)?;
         let processed = process_image(buf.clone(), ATOMONE.colors.to_vec(), Bayer8, *ampl);
         let proc_end = SystemTime::now();
-        save_image(&processed, &path, &args.format)?;
+        save_image(&processed, &path, &args.format, args.quality.unwrap_or_else(|| 100u8))?;
         let save_end = SystemTime::now();
 
         println!("   [{:>7.1?}]   {}", save_end.duration_since(proc_start)?, format!( "Saved at  {}", path));

@@ -10,6 +10,7 @@ pub struct Config {
     pub input: String,
     pub output: String,
     pub format: Format,
+    pub quality: u8,
 
     pub palette: data::Palette,
     pub dither: Dither,
@@ -48,18 +49,19 @@ pub fn from_args(args: &Args) -> Result<Config, AppError> {
         Bayer16 => 64
     };
     let ampl = args.ampl.unwrap_or_else(|| ideal_ampl) as f32;
-    
+
     let format = args.format.clone();
+    let quality = args.quality.unwrap_or_else(|| args.quality.unwrap_or(90));
     let input = match args.input.to_str() {
         Some(input) => input,
         None => return Err(AppError::InputFileDoesNotExist(args.input.clone()))
     }.to_string();
     let output = create_output_path(&args, "", &palette, ampl, dither, &format)?;
-    
+
     let size= args.size.unwrap_or(0);
     let runtime = args.runtime;
     let test = args.test.unwrap_or_else(|| TestType::None);
-    Ok(Config { input, output, format, palette, dither, ampl, size, runtime, test })
+    Ok(Config { input, output, format, quality, palette, dither, ampl, size, runtime, test })
 }
 
 // sets output path either to user desired path OR creates a new one from given arguments
