@@ -22,8 +22,9 @@ Options:
   -a, --ampl <AMPL>        Bayer Amplitude  [default: bayerX * 4, <256] 
                            
   -i, --input <INPUT>      Input file path  
-  -f, --format <FORMAT>    Output file type [default: jpg] [possible values: png, jpg, jpeg]
   -o, --output <OUTPUT>    Output file path [default: <input>_<palette>_<dither>.<format>]
+  -f, --format <FORMAT>    Output file type [default: jpeg] [possible values: png, jpeg]
+  -q, --quality <QUALITY>  Jpeg Quality     [default: 90]
                            
   -s, --showcase <SIZE>    Show in-terminal (recommended value: <= 20)
   -r, --runtime            Show runtime performance
@@ -36,22 +37,23 @@ Options:
 In all these examples, ReChrome saves the image to the input directory, appending palette and dithering parameter to the file name.\
 When converting low-res images, you might see a lot of noise. Using a lower bayer amplitude with `-a 16` can reduce this effect.
 
->**Simple conversion**\
->` <correctDir>.\rechrome.exe -i "C:\Users\<user>\Downloads\goldfish.jpg" -p atomone`
+>**Simple conversion, saving as jpeg with 85% quality**\
+>` <correctDir>.\rechrome.exe -i "C:\Users\<user>\Downloads\goldfish.jpg" -p gruvbox -q 85`
 
->**Manual dithering** (watercolor effect)\
->` <correctDir>.\rechrome.exe -i "C:\Users\<user>\Downloads\goldfish.jpg" -p atomone -d bayer2 -a 128`
+>**Manual dithering, saving as png** (watercolor effect)\
+>` <correctDir>.\rechrome.exe -i "C:\Users\<user>\Downloads\goldfish.jpg" -p gruvbox -d bayer2 -a 128 -f png`
 
 >**Test image with all palettes**\
 >` <correctDir>.\rechrome.exe -i "C:\Users\<user>\Downloads\goldfish.jpg" -t palette`
 
 >**Conversion with preview in-terminal** (examples below)\
->` <correctDir>.\rechrome.exe -i "C:\Users\<user>\Downloads\goldfish.jpg" -p atomone -s 22`
+>` <correctDir>.\rechrome.exe -i "C:\Users\<user>\Downloads\goldfish.jpg" -p gruvbox -s 22`
 >
 > <img src="images/preview_atomone.jpg" width="200" alt="Preview_AtomOne"> <img src="images/preview_gruvbox.jpg" width="200" alt="Preview_Gruvbox"> <img src="images/preview_synthwave.jpg" width="200" alt="Preview_Synthwave">
 
 
 ## 📦Install
+### Download Binary
 Download the most recent release under the "Releases" Section on the right hand side, then unzip it and use it in your terminal
 
 Unfortunately, the binary might be flagged by Windows Defender as a Virus\
@@ -60,7 +62,7 @@ To circumvent this, please follow these steps:
 - Exclude said folder from Windows Defender
 - Unzip ReChrome to that folder
 
-### Alternative: Build from Source
+### Build from Source
 
 Alternatively, you can always compile ReChrome yourself.
 
