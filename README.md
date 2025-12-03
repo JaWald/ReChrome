@@ -37,19 +37,21 @@ Options:
 In all these examples, ReChrome saves the image to the input directory, appending palette and dithering parameter to the file name.\
 When converting low-res images, you might see a lot of noise. Using a lower bayer amplitude with `-a 16` can reduce this effect.
 
->**Simple conversion, saving as jpeg with 85% quality**\
->` <correctDir>.\rechrome.exe -i "C:\Users\<user>\Downloads\goldfish.jpg" -p gruvbox -q 85`
+```c++
+ // Simple conversion, saving as jpeg with 85% quality
+ <correctDir>.\rechrome.exe -i "C:\Users\<user>\Downloads\goldfish.jpg" -p gruvbox -q 85
 
->**Manual dithering** (watercolor effect)\
->` <correctDir>.\rechrome.exe -i "C:\Users\<user>\Downloads\goldfish.jpg" -p gruvbox -d bayer2 -a 128`
+ // Manual dithering (watercolor effect)
+ <correctDir>.\rechrome.exe -i "C:\Users\<user>\Downloads\goldfish.jpg" -p gruvbox -d bayer2 -a 128
 
->**Test image with all palettes, saving as png**\
->` <correctDir>.\rechrome.exe -i "C:\Users\<user>\Downloads\goldfish.jpg" -t palette -f png`
+ // Test image with all palettes, saving as png
+ <correctDir>.\rechrome.exe -i "C:\Users\<user>\Downloads\goldfish.jpg" -t palette -f png
 
->**Conversion with preview in-terminal** (examples below)\
->` <correctDir>.\rechrome.exe -i "C:\Users\<user>\Downloads\goldfish.jpg" -p gruvbox -s 22`
->
-> <img src="images/preview_atomone.jpg" width="200" alt="Preview_AtomOne"> <img src="images/preview_gruvbox.jpg" width="200" alt="Preview_Gruvbox"> <img src="images/preview_synthwave.jpg" width="200" alt="Preview_Synthwave">
+ // Conversion with preview in-terminal (examples below)
+ <correctDir>.\rechrome.exe -i "C:\Users\<user>\Downloads\goldfish.jpg" -p gruvbox -s 22
+
+```
+<img src="images/preview_atomone.jpg" width="200" alt="Preview_AtomOne"> <img src="images/preview_gruvbox.jpg" width="200" alt="Preview_Gruvbox"> <img src="images/preview_synthwave.jpg" width="200" alt="Preview_Synthwave">
 
 
 ## 📦Install
