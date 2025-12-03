@@ -1,9 +1,11 @@
 use image::{DynamicImage, Rgba, RgbaImage};
+use jpeg_encoder::{ColorType, Encoder};
 use rayon::prelude::*;
 use kiddo::{ImmutableKdTree, SquaredEuclidean};
 use crate::cli::{Dither};
 use crate::cli::Dither::*;
 use crate::data;
+use crate::error::AppError;
 
 pub fn process_image(mut buf: RgbaImage, palette: Vec<[f32; 3]>, dither: Dither, amplitude: f32) -> DynamicImage {
     let tree: ImmutableKdTree<f32, 3> = ImmutableKdTree::new_from_slice(&*palette);
@@ -26,7 +28,20 @@ pub fn process_image(mut buf: RgbaImage, palette: Vec<[f32; 3]>, dither: Dither,
         let index = nearest.item as usize;
         let color = palette[index];
 
-        *pix = Rgba([color[0] as u8, color[1] as u8, color[2] as u8, 0xFF]);
+        *pix = Rgba([color[0] as u8, color[1] as u8, color[2] as u8, pix[3]]);
     });
     DynamicImage::ImageRgba8(buf)
+}
+
+pub fn save_image(processed: RgbaImage, output: &String, format: String) -> Result<(), AppError> {
+    let width = processed.width() as u16;
+    let height = processed.height() as u16;
+    let encoder = Encoder::new_file(output, 100).unwrap();
+
+    if format != "png" {
+        encoder.encode(processed.to_vec().as_slice(), width, height, ColorType::Rgba).expect("Should have been able to save image");
+    } else {
+        processed.save(output)?;
+    }
+    Ok(())
 }

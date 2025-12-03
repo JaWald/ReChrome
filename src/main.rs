@@ -61,7 +61,7 @@ fn run() -> Result<(), AppError> {
     let end_load = SystemTime::now();
     let dur_load = end_load.duration_since(start_load)?;
 
-    // ------------------------------------------ PROCESS ------------------------------------------
+    // ------------------------------------------ PROCESS -----------------------------------------
     let start_proc = SystemTime::now();
     let processed = process_image(img.into_rgba8(), config.palette, config.dither, config.ampl);
     let end_proc = SystemTime::now();
@@ -69,7 +69,7 @@ fn run() -> Result<(), AppError> {
 
     // ------------------------------------------ OUTPUT ------------------------------------------
     let start_save = SystemTime::now();
-    processed.save(&config.output)?;
+    save_image(processed.to_rgba8(), &config.output, config.format)?;
     let end_save = SystemTime::now();
     let dur_save = end_save.duration_since(start_save)?;
 

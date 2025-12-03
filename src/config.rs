@@ -8,7 +8,7 @@ use crate::data::*;
 pub struct Config {
     pub input: String,
     pub output: String,
-    //pub format: String,
+    pub format: String,
 
     pub palette: Vec<[f32; 3]>,
     pub palette_name: String,
@@ -25,7 +25,7 @@ pub fn from_args(args: &Args) -> Result<Config, AppError> {
         Some(pal) => {
             match pal {
                 Atomone     => ATOMONE.to_vec(),
-                Catppuccin   => CATPPUCCIN.to_vec(),
+                Catppuccin  => CATPPUCCIN.to_vec(),
                 Darcula     => DARCULA.to_vec(),
                 Everforest  => EVERFOREST.to_vec(),
                 Gruvbox     => GRUVBOX.to_vec(),
@@ -76,7 +76,7 @@ pub fn from_args(args: &Args) -> Result<Config, AppError> {
         Format::Jpg => "jpg".to_string(),
         Format::Jpeg => "jpeg".to_string()
     };
-    let output = create_output_path(&args, palette_name.as_str(), ampl, dither, format.as_str())?;
+    let output = create_output_path(&args, palette_name.as_str(), ampl, dither, &*format)?;
 
     let size= args.size.unwrap_or(0);
     let runtime = args.runtime;
@@ -84,7 +84,7 @@ pub fn from_args(args: &Args) -> Result<Config, AppError> {
         Some(test) => {test}
         None => TestType::None
     };
-    Ok(Config { input, output, /*format,*/ palette, palette_name, dither, ampl, size, runtime, test })
+    Ok(Config { input, output, format, palette, palette_name, dither, ampl, size, runtime, test })
 }
 
 // sets output path either to user desired path OR creates a new one from given arguments
