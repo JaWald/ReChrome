@@ -35,13 +35,14 @@ Options:
 ```
 ## 🛠️ Example usage
 In all these examples, ReChrome saves the image to the input directory, appending palette and dithering parameter to the file name.\
-When converting low-res images, you might see a lot of noise. Using a lower bayer amplitude with `-a 16` can reduce this effect.
+When converting low-res images, you might see a lot of noise. Using a lower bayer amplitude can reduce this effect.\
+Recommended: `-a 64` for 4K and `-a 16` for 1080p
 
 ```c++
  // Simple conversion, saving as jpeg with 85% quality
  <correctDir>.\rechrome.exe -i "C:\Users\<user>\Downloads\goldfish.jpg" -p gruvbox -q 85
 
- // Manual dithering (watercolor effect)
+ // Manual dithering (watercolor effect for 4K images)
  <correctDir>.\rechrome.exe -i "C:\Users\<user>\Downloads\goldfish.jpg" -p gruvbox -d bayer2 -a 128
 
  // Test image with all palettes, saving as png
@@ -49,7 +50,6 @@ When converting low-res images, you might see a lot of noise. Using a lower baye
 
  // Conversion with preview in-terminal (examples below)
  <correctDir>.\rechrome.exe -i "C:\Users\<user>\Downloads\goldfish.jpg" -p gruvbox -s 22
-
 ```
 <img src="images/preview_atomone.jpg" width="200" alt="Preview_AtomOne"> <img src="images/preview_gruvbox.jpg" width="200" alt="Preview_Gruvbox"> <img src="images/preview_synthwave.jpg" width="200" alt="Preview_Synthwave">
 

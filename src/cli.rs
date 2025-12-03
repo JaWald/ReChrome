@@ -11,7 +11,7 @@ pub struct Args {
     pub palette: Option<Palette>,
 
     /// Dithering Modes
-    #[arg(short, long, value_enum, default_value = "bayer16", help = "Dithering Modes ")]
+    #[arg(short, long, value_enum, default_value = "bayer8", help = "Dithering Modes ")]
     pub dither: Dither,
 
     /// Bayer amplitude
