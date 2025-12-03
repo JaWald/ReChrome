@@ -70,7 +70,6 @@ pub enum Dither {
 #[derive(Debug, Clone, ValueEnum)]
 pub enum Format {
     Png,
-    Jpg,
     Jpeg
 }
 #[derive(Debug, Clone, Copy, PartialEq, ValueEnum)]

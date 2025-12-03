@@ -63,13 +63,13 @@ fn run() -> Result<(), AppError> {
 
     // ------------------------------------------ PROCESS -----------------------------------------
     let start_proc = SystemTime::now();
-    let processed = process_image(img.into_rgba8(), config.palette, config.dither, config.ampl);
+    let processed = process_image(img.into_rgba8(), config.palette.colors.to_vec(), config.dither, config.ampl);
     let end_proc = SystemTime::now();
     let dur_proc = end_proc.duration_since(start_proc)?;
 
     // ------------------------------------------ OUTPUT ------------------------------------------
     let start_save = SystemTime::now();
-    save_image(processed.to_rgba8(), &config.output, config.format)?;
+    save_image(&processed, &config.output, &config.format)?;
     let end_save = SystemTime::now();
     let dur_save = end_save.duration_since(start_save)?;
 

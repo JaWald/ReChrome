@@ -1,8 +1,8 @@
-use image::{DynamicImage, Rgba, RgbaImage};
+use image::{DynamicImage, EncodableLayout, Rgba, RgbaImage};
 use jpeg_encoder::{ColorType, Encoder};
 use rayon::prelude::*;
 use kiddo::{ImmutableKdTree, SquaredEuclidean};
-use crate::cli::{Dither};
+use crate::cli::{Dither, Format};
 use crate::cli::Dither::*;
 use crate::data;
 use crate::error::AppError;
@@ -33,15 +33,16 @@ pub fn process_image(mut buf: RgbaImage, palette: Vec<[f32; 3]>, dither: Dither,
     DynamicImage::ImageRgba8(buf)
 }
 
-pub fn save_image(processed: RgbaImage, output: &String, format: String) -> Result<(), AppError> {
+pub fn save_image(processed: &DynamicImage, output: &String, format: &Format) -> Result<(), AppError> {
     let width = processed.width() as u16;
     let height = processed.height() as u16;
-    let encoder = Encoder::new_file(output, 100).unwrap();
-
-    if format != "png" {
-        encoder.encode(processed.to_vec().as_slice(), width, height, ColorType::Rgba).expect("Should have been able to save image");
-    } else {
-        processed.save(output)?;
+    let encoder = Encoder::new_file(output, 90).unwrap();
+    match format {
+        Format::Png =>  processed.save(output)?,
+        Format::Jpeg => {
+            let rgb8 = processed.to_rgb8();
+            encoder.encode(rgb8.as_bytes(), width, height, ColorType::Rgb).expect("Should have been able to save image")
+        }
     }
     Ok(())
 }

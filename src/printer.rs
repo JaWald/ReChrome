@@ -10,11 +10,9 @@ pub fn print_dashes(size: u32) {
 
 pub fn print_selection(config: &Config, output: &str) {
     println!(" \x1b[1mSelection: \x1b[0m");
-    println!("   \x1b[32;1mPalette:\x1b[0m\x1b[1m  {}\x1b[0m", config.palette_name);
+    println!("   \x1b[32;1mPalette:\x1b[0m\x1b[1m  {}\x1b[0m", config.palette.full_name);
     match config.dither {
-        Dither::Bayer2 |
-        Dither::Bayer4 |
-        Dither::Bayer8 |
+        Dither::Bayer2 | Dither::Bayer4 | Dither::Bayer8 |
         Dither::Bayer16 => println!("   \x1b[33;1mDither:\x1b[0m\x1b[1m   {:?} - {:.0}\x1b[0m", config.dither, config.ampl),
         Dither::Raw     => println!("   \x1b[33;1mDither:\x1b[0m\x1b[1m   {:?}\x1b[0m", config.dither)
     }
