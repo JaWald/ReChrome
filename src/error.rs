@@ -7,6 +7,7 @@ pub enum AppError {
     ImageError(ImageError),
     SystemTimeError(SystemTimeError),
     IoError(std::io::Error),
+    CompressionError(turbojpeg::Error),
 }
 
 impl From<std::io::Error> for AppError {
@@ -24,6 +25,12 @@ impl From<ImageError> for AppError {
 impl From<SystemTimeError> for AppError {
     fn from(err: SystemTimeError) -> AppError {
         AppError::SystemTimeError(err)
+    }
+}
+
+impl From<turbojpeg::Error> for AppError {
+    fn from(err: turbojpeg::Error) -> AppError { 
+        AppError::CompressionError(err) 
     }
 }
 

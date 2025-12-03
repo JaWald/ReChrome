@@ -1,6 +1,80 @@
 // ------------------------------------------- PALETTES -------------------------------------------
+pub struct Palette {
+    pub colors: &'static [[f32; 3]],
+    pub full_name: &'static str,
+    pub file_name: &'static str,
+}
+
+pub const PALETTES: [Palette; 11] = [ATOMONE, CATPPUCCIN, DARCULA, EVERFOREST, GRUVBOX, KANAGAWA, MONOKAI, NORD, PAPERCOLOR, SOLARIZED, SYNTHWAVE];
+
+pub const ATOMONE: Palette = Palette {
+    full_name: "AtomOne",
+    file_name: "atomone",
+    colors: &ATOMONE_PALETTE
+};
+
+pub const CATPPUCCIN: Palette = Palette {
+    full_name: "Catppuccin",
+    file_name: "catppuc",
+    colors: &CATPPUCCIN_PALETTE
+};
+
+pub const DARCULA: Palette = Palette {
+    full_name: "Darcula",
+    file_name: "darcula",
+    colors: &DARCULA_PALETTE
+};
+
+pub const EVERFOREST: Palette = Palette {
+    full_name: "Everforest",
+    file_name: "evrfrst",
+    colors: &EVERFOREST_PALETTE
+};
+
+pub const GRUVBOX: Palette = Palette {
+    full_name: "Gruvbox",
+    file_name: "gruvbox",
+    colors: &GRUVBOX_PALETTE
+};
+
+pub const KANAGAWA: Palette = Palette {
+    full_name: "Kanagawa",
+    file_name: "kanagwa",
+    colors: &KANAGAWA_PALETTE
+};
+
+pub const MONOKAI: Palette = Palette {
+    full_name: "Monokai",
+    file_name: "monokai",
+    colors: &MONOKAI_PALETTE
+};
+
+pub const NORD: Palette = Palette {
+    full_name: "Nord",
+    file_name: "nord___",
+    colors: &NORD_PALETTE
+};
+
+pub const PAPERCOLOR: Palette = Palette {
+    full_name: "PaperColor",
+    file_name: "paprcol",
+    colors: &PAPERCOLOR_PALETTE
+};
+
+pub const SOLARIZED: Palette = Palette {
+    full_name: "Solarized",
+    file_name: "solarzd",
+    colors: &SOLARIZED_PALETTE
+};
+
+pub const SYNTHWAVE: Palette = Palette {
+    full_name: "Synthwave",
+    file_name: "synthwv",
+    colors: &SYNTHWAVE_PALETTE
+};
+
 // https://github.com/Th3Whit3Wolf/one-nvim/tree/main
-pub const ATOMONE: &'static [[f32; 3]] =
+pub const ATOMONE_PALETTE: &'static [[f32; 3]] =
     &[[171.0, 178.0, 191.0], [130.0, 137.0, 151.0], [ 92.0,  99.0, 112.0], [ 75.0,  82.0,  99.0],
         [ 86.0, 182.0, 194.0], [ 97.0, 175.0, 239.0], [198.0, 120.0, 221.0], [152.0, 195.0, 121.0],
         [224.0, 108.0, 117.0], [190.0,  80.0,  70.0], [209.0, 154.0, 102.0], [229.0, 192.0, 123.0],
@@ -19,7 +93,7 @@ pub const ATOMONE: &'static [[f32; 3]] =
     ];
 
 // https://catppuccin.com/palette/
-pub const CATPPUCCIN: &'static [[f32; 3]] =
+pub const CATPPUCCIN_PALETTE: &'static [[f32; 3]] =
     &[[220.0, 138.0, 120.0], [221.0, 120.0, 120.0], [234.0, 118.0, 203.0], [136.0,  57.0, 239.0],
         [210.0,  15.0,  57.0], [230.0,  69.0,  83.0], [254.0, 100.0,  11.0], [223.0, 142.0,  29.0],
         [ 64.0, 160.0,  43.0], [ 23.0, 146.0, 153.0], [  4.0, 165.0, 229.0], [ 32.0, 159.0, 181.0],
@@ -49,7 +123,7 @@ pub const CATPPUCCIN: &'static [[f32; 3]] =
     ];
 
 // https://github.com/doums/darcula
-pub const DARCULA: &'static [[f32; 3]] =
+pub const DARCULA_PALETTE: &'static [[f32; 3]] =
     &[[ 43.0,  43.0,  43.0], [169.0, 183.0, 198.0], [187.0, 187.0, 187.0], [ 52.0,  65.0,  52.0],
         [ 64.0,  51.0,  43.0], [ 49.0,  51.0,  53.0], [ 33.0,  66.0, 131.0], [ 50.0,  50.0,  50.0],
         [164.0, 163.0, 163.0], [204.0, 102.0, 110.0], [188.0,  63.0,  60.0], [ 96.0,  96.0,  96.0],
@@ -72,7 +146,7 @@ pub const DARCULA: &'static [[f32; 3]] =
     ];
 
 // https://github.com/sainnhe/everforest
-pub const EVERFOREST: &'static [[f32; 3]] =
+pub const EVERFOREST_PALETTE: &'static [[f32; 3]] =
     &[[ 30.0,  35.0,  38.0], [ 39.0,  46.0,  51.0], [ 46.0,  56.0,  60.0], [ 55.0,  65.0,  69.0],
         [ 65.0,  75.0,  80.0], [ 73.0,  81.0,  86.0], [ 79.0,  91.0,  88.0], [ 76.0,  55.0,  67.0],
         [ 73.0,  59.0,  64.0], [ 69.0,  68.0,  60.0], [ 60.0,  72.0,  65.0], [ 56.0,  75.0,  85.0],
@@ -101,7 +175,7 @@ pub const EVERFOREST: &'static [[f32; 3]] =
     ];
 
 // https://github.com/morhetz/gruvbox
-pub const GRUVBOX: &'static [[f32; 3]] =
+pub const GRUVBOX_PALETTE: &'static [[f32; 3]] =
     &[[ 40.0,  40.0,  40.0], [204.0,  36.0,  29.0], [152.0, 151.0,  26.0], [215.0, 153.0,  33.0],
         [ 69.0, 133.0, 136.0], [177.0,  98.0, 134.0], [104.0, 157.0, 106.0], [168.0, 153.0, 132.0],
         [146.0, 131.0, 116.0], [251.0,  73.0,  52.0], [184.0, 187.0,  38.0], [250.0, 189.0,  47.0],
@@ -114,7 +188,7 @@ pub const GRUVBOX: &'static [[f32; 3]] =
     ];
 
 // https://github.com/rebelot/kanagawa.nvim
-pub const KANAGAWA: &'static [[f32; 3]] =
+pub const KANAGAWA_PALETTE: &'static [[f32; 3]] =
     &[[220.0, 215.0, 186.0], [200.0, 192.0, 147.0], [ 22.0,  22.0,  29.0], [ 31.0,  31.0,  40.0],
         [ 42.0,  42.0,  55.0], [ 54.0,  54.0,  70.0], [ 84.0,  84.0, 109.0], [ 34.0,  50.0,  73.0],
         [ 45.0,  79.0, 103.0], [ 43.0,  51.0,  40.0], [ 73.0,  68.0,  60.0], [ 67.0,  36.0,  43.0],
@@ -136,7 +210,7 @@ pub const KANAGAWA: &'static [[f32; 3]] =
 
 
 // https://github.com/UtkarshVerma/molokai.nvim
-pub const MONOKAI: &'static [[f32; 3]] =
+pub const MONOKAI_PALETTE: &'static [[f32; 3]] =
     &[[ 27.0,  29.0,  30.0], [248.0, 248.0, 242.0], [128.0, 128.0, 128.0], [ 70.0,  71.0,  65.0],
         [126.0, 142.0, 145.0], [129.0, 154.0, 255.0], [102.0, 217.0, 239.0], [249.0,  38.0, 114.0],
         [174.0, 129.0, 255.0], [253.0, 151.0,  31.0], [230.0, 219.0, 116.0], [166.0, 226.0,  46.0],
@@ -145,7 +219,7 @@ pub const MONOKAI: &'static [[f32; 3]] =
     ];
 
 // https://www.nordtheme.com/docs/colors-and-palettes
-pub const NORD: &'static [[f32; 3]] =
+pub const NORD_PALETTE: &'static [[f32; 3]] =
     &[[ 46.0,  52.0,  64.0], [ 59.0,  66.0,  82.0], [ 67.0,  76.0,  94.0], [ 76.0,  86.0, 106.0],
         [216.0, 222.0, 233.0], [229.0, 233.0, 240.0], [236.0, 239.0, 244.0], [143.0, 188.0, 187.0],
         [136.0, 192.0, 208.0], [129.0, 161.0, 193.0], [ 94.0, 129.0, 172.0], [191.0,  97.0, 106.0],
@@ -154,7 +228,7 @@ pub const NORD: &'static [[f32; 3]] =
 
 
 // https://github.com/NLKNguyen/papercolor-theme
-pub const PAPERCOLOR: &'static [[f32; 3]] =
+pub const PAPERCOLOR_PALETTE: &'static [[f32; 3]] =
     &[[238.0, 238.0, 238.0], [175.0,   0.0,   0.0], [  0.0, 135.0,   0.0], [ 95.0, 135.0,   0.0],
         [  0.0, 135.0, 175.0], [135.0, 135.0, 135.0], [  0.0,  95.0, 135.0], [ 68.0,  68.0,  68.0],
         [188.0, 188.0, 188.0], [215.0,   0.0,   0.0], [215.0,   0.0, 135.0], [135.0,   0.0, 175.0],
@@ -166,7 +240,7 @@ pub const PAPERCOLOR: &'static [[f32; 3]] =
     ];
 
 // https://github.com/solarized/xresources
-pub const SOLARIZED: &'static [[f32; 3]] =
+pub const SOLARIZED_PALETTE: &'static [[f32; 3]] =
     &[[  0.0,  43.0,  54.0], [  7.0,  54.0,  66.0], [ 88.0, 110.0, 117.0], [101.0, 123.0, 131.0],
         [131.0, 148.0, 150.0], [147.0, 161.0, 161.0], [238.0, 232.0, 213.0], [253.0, 246.0, 227.0],
         [181.0, 137.0,   0.0], [203.0,  75.0,  22.0], [220.0,  50.0,  47.0], [211.0,  54.0, 130.0],
@@ -174,7 +248,7 @@ pub const SOLARIZED: &'static [[f32; 3]] =
     ];
 
 // https://github.com/robb0wen/synthwave-vscode
-pub const SYNTHWAVE: &'static [[f32; 3]] =
+pub const SYNTHWAVE_PALETTE: &'static [[f32; 3]] =
     &[[ 31.0,  33.0,  43.0], [255.0, 255.0, 255.0], [ 42.0,  33.0,  57.0], [254.0,  68.0,  80.0],
         [255.0, 126.0, 219.0], [249.0, 126.0, 114.0], [ 97.0,  77.0, 133.0], [ 35.0,  37.0,  48.0],
         [157.0, 139.0, 202.0], [ 52.0,  41.0,  79.0], [ 55.0,  41.0,  77.0], [114.0, 241.0, 184.0],

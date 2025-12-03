@@ -39,6 +39,11 @@ fn main() {
             eprintln!("{:>16}{}\n", "", e);
             exit(1)
         }
+        Err(AppError::CompressionError(e)) => {
+            eprintln!("\n\x1b[31;1mERROR[005] --->\x1b[0m\x1b[1m Jpeg compression has failed\x1b[0m");
+            eprintln!("{:>16}{}\n", "", e);
+            exit(1)
+        }
     }
 }
 
@@ -61,15 +66,15 @@ fn run() -> Result<(), AppError> {
     let end_load = SystemTime::now();
     let dur_load = end_load.duration_since(start_load)?;
 
-    // ------------------------------------------ PROCESS ------------------------------------------
+    // ------------------------------------------ PROCESS -----------------------------------------
     let start_proc = SystemTime::now();
-    let processed = process_image(img.into_rgba8(), config.palette, config.dither, config.ampl);
+    let processed = process_image(img.into_rgba8(), config.palette.colors.to_vec(), config.dither, config.ampl);
     let end_proc = SystemTime::now();
     let dur_proc = end_proc.duration_since(start_proc)?;
 
     // ------------------------------------------ OUTPUT ------------------------------------------
     let start_save = SystemTime::now();
-    processed.save(&config.output)?;
+    save_image(&processed, &config.output, &config.format, config.quality)?;
     let end_save = SystemTime::now();
     let dur_save = end_save.duration_since(start_save)?;
 

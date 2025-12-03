@@ -22,13 +22,17 @@ pub struct Args {
     #[arg(short, long, help = "\x1b[33;1mInput file path  \x1b[0m")]
     pub input: PathBuf,
 
+    /// Output file path
+    #[arg(short, long, help = "Output file path [default: <input>_<palette>_<dither>.<format>]")]
+    pub output: Option<PathBuf>,
+
     /// Output file type
-    #[arg(short, long, value_enum, default_value = "png")]
+    #[arg(short, long, value_enum, default_value = "jpeg")]
     pub format: Format,
 
-    /// Output file path
-    #[arg(short, long, help = "Output file path [default: <input>_<palette>_<dither>.<format>]\n")]
-    pub output: Option<PathBuf>,
+    /// Jpeg quality
+    #[arg(short, long, help = "Jpeg Quality     [default: 90]\n")]
+    pub quality: Option<u8>,
 
     /// Show in-terminal (recommended value: <= 20)
     #[arg(short = 's', long = "showcase")]
@@ -70,7 +74,6 @@ pub enum Dither {
 #[derive(Debug, Clone, ValueEnum)]
 pub enum Format {
     Png,
-    Jpg,
     Jpeg
 }
 #[derive(Debug, Clone, Copy, PartialEq, ValueEnum)]

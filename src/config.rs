@@ -2,16 +2,17 @@ use crate::cli::*;
 use crate::cli::Args;
 use crate::cli::Dither::*;
 use crate::cli::Palette::*;
+use crate::data;
 use crate::error::AppError;
 use crate::data::*;
 
 pub struct Config {
     pub input: String,
     pub output: String,
-    //pub format: String,
+    pub format: Format,
+    pub quality: u8,
 
-    pub palette: Vec<[f32; 3]>,
-    pub palette_name: String,
+    pub palette: data::Palette,
     pub dither: Dither,
     pub ampl: f32,
 
@@ -22,41 +23,23 @@ pub struct Config {
 
 pub fn from_args(args: &Args) -> Result<Config, AppError> {
     let palette = match &args.palette {
-        Some(pal) => {
-            match pal {
-                Atomone     => ATOMONE.to_vec(),
-                Catppuccin   => CATPPUCCIN.to_vec(),
-                Darcula     => DARCULA.to_vec(),
-                Everforest  => EVERFOREST.to_vec(),
-                Gruvbox     => GRUVBOX.to_vec(),
-                Kanagawa    => KANAGAWA.to_vec(),
-                Monokai     => MONOKAI.to_vec(),
-                Nord        => NORD.to_vec(),
-                Papercolor  => PAPERCOLOR.to_vec(),
-                Solarized   => SOLARIZED.to_vec(),
-                Synthwave   => SYNTHWAVE.to_vec()
+        Some(p) => {
+            match p {
+                Atomone     => ATOMONE,
+                Catppuccin  => CATPPUCCIN,
+                Darcula     => DARCULA,
+                Everforest  => EVERFOREST,
+                Gruvbox     => GRUVBOX,
+                Kanagawa    => KANAGAWA,
+                Monokai     => MONOKAI,
+                Nord        => NORD,
+                Papercolor  => PAPERCOLOR,
+                Solarized   => SOLARIZED,
+                Synthwave   => SYNTHWAVE
             }
         }
-        None => vec![]
+        None => ATOMONE
     };
-    let palette_name = match &args.palette {
-        Some(pal) => {
-            match pal {
-                Atomone     => "AtomOne",
-                Catppuccin  => "Catppuccin",
-                Darcula     => "Darcula",
-                Everforest  => "Everforest",
-                Gruvbox     => "Gruvbox",
-                Kanagawa    => "Kanagawa",
-                Monokai     => "Monokai",
-                Nord        => "Nord",
-                Papercolor  => "PaperColor",
-                Solarized   => "Solarized",
-                Synthwave   => "Synthwave"
-            }
-        }
-        None => ""
-    }.to_string();
     let dither = args.dither;
     let ideal_ampl = match dither {
         Raw     => 0,
@@ -67,29 +50,23 @@ pub fn from_args(args: &Args) -> Result<Config, AppError> {
     };
     let ampl = args.ampl.unwrap_or_else(|| ideal_ampl) as f32;
 
+    let format = args.format.clone();
+    let quality = args.quality.unwrap_or_else(|| args.quality.unwrap_or(90));
     let input = match args.input.to_str() {
         Some(input) => input,
         None => return Err(AppError::InputFileDoesNotExist(args.input.clone()))
     }.to_string();
-    let format = match args.format {
-        Format::Png => "png".to_string(),
-        Format::Jpg => "jpg".to_string(),
-        Format::Jpeg => "jpeg".to_string()
-    };
-    let output = create_output_path(&args, palette_name.as_str(), ampl, dither, format.as_str())?;
+    let output = create_output_path(&args, "", &palette, ampl, dither, &format)?;
 
     let size= args.size.unwrap_or(0);
     let runtime = args.runtime;
-    let test = match args.test {
-        Some(test) => {test}
-        None => TestType::None
-    };
-    Ok(Config { input, output, /*format,*/ palette, palette_name, dither, ampl, size, runtime, test })
+    let test = args.test.unwrap_or_else(|| TestType::None);
+    Ok(Config { input, output, format, quality, palette, dither, ampl, size, runtime, test })
 }
 
 // sets output path either to user desired path OR creates a new one from given arguments
 // format: <originalName>_<palette>_[<dither>]-[<amplitude>].<format>
-pub fn create_output_path(args: &Args, palette_name: &str, ampl: f32, dither: Dither, format: &str) -> Result<String, AppError> {
+pub fn create_output_path(args: &Args, test: &str, palette: &data::Palette, ampl: f32, dither: Dither, format: &Format) -> Result<String, AppError> {
     match &args.output {
         Some(path) => Ok(path.to_string_lossy().to_string()),
         None => {
@@ -97,20 +74,6 @@ pub fn create_output_path(args: &Args, palette_name: &str, ampl: f32, dither: Di
             let input_stem = path.file_stem()
                 .ok_or_else(|| AppError::InputFileDoesNotExist(args.input.clone()))?
                 .to_string_lossy();
-            let palette_str = match palette_name {
-                "AtomOne"       => "atomone",
-                "Catppuccin"    => "catppuc",
-                "Darcula"       => "darcula_",
-                "Everforest"    => "everforst",
-                "Gruvbox"       => "gruvbox",
-                "Kanagawa"      => "kanagwa",
-                "Monokai"       => "monokai",
-                "Nord"          => "nord___",
-                "PaperColor"    => "paprcol",
-                "Solarized"     => "solarizd",
-                "Synthwave"     => "synthwv",
-                &_ => "",
-            };
             let ampl_str = if ampl < 10.0 {
                 format!("--{:.0}", ampl)
             } else if ampl < 100.0 {
@@ -125,12 +88,17 @@ pub fn create_output_path(args: &Args, palette_name: &str, ampl: f32, dither: Di
                 Bayer8 =>  format!("_bayer-8-{}", ampl_str),
                 Bayer16 => format!("_bayer16-{}", ampl_str)
             };
+            let format_str = match format {
+                Format::Png => "png".to_string(),
+                Format::Jpeg => "jpeg".to_string(),
+            };
             let file = format!(
-                "{}_{}{}.{}",
+                "{}_{}_{}{}.{}",
                 input_stem,
-                palette_str,
+                test,
+                palette.file_name,
                 dither_str,
-                format
+                format_str
             );
             path.set_file_name(file);
             Ok(path.to_string_lossy().to_string())
