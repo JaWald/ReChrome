@@ -27,7 +27,7 @@ pub struct Args {
     pub output: Option<PathBuf>,
 
     /// Output file type
-    #[arg(short, long, value_enum, default_value = "png")]
+    #[arg(short, long, value_enum, default_value = "jpeg")]
     pub format: Format,
 
     /// Jpeg quality

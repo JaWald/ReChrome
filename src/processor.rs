@@ -1,5 +1,5 @@
-use image::{DynamicImage, EncodableLayout, Rgba, RgbaImage};
-use jpeg_encoder::{ColorType, Encoder};
+use image::{DynamicImage, Rgba, RgbaImage};
+use turbojpeg;
 use rayon::prelude::*;
 use kiddo::{ImmutableKdTree, SquaredEuclidean};
 use crate::cli::{Dither, Format};
@@ -34,14 +34,24 @@ pub fn process_image(mut buf: RgbaImage, palette: Vec<[f32; 3]>, dither: Dither,
 }
 
 pub fn save_image(processed: &DynamicImage, output: &String, format: &Format, quality: u8) -> Result<(), AppError> {
-    let width = processed.width() as u16;
-    let height = processed.height() as u16;
-    let encoder = Encoder::new_file(output, quality).unwrap();
     match format {
         Format::Png =>  processed.save(output)?,
         Format::Jpeg => {
-            let rgb8 = processed.to_rgb8();
-            encoder.encode(rgb8.as_bytes(), width, height, ColorType::Rgb).expect("Should have been able to save image")
+            let vec = processed.to_rgb8().to_vec();
+            let pixels = vec.as_slice();
+            let image = turbojpeg::Image {
+                pixels,
+                width: processed.width() as usize,
+                pitch: processed.width() as usize * turbojpeg::PixelFormat::RGB.size(),
+                height: processed.height() as usize,
+                format: turbojpeg::PixelFormat::RGB
+            };
+            let mut compressor = turbojpeg::Compressor::new()?;
+            compressor.set_quality(quality as i32)?;
+            compressor.set_subsamp(turbojpeg::Subsamp::Sub2x2)?;
+            let mut output_buf = turbojpeg::OutputBuf::new_owned();
+            compressor.compress(image, &mut output_buf)?;
+            std::fs::write(output, output_buf)?;
         }
     }
     Ok(())

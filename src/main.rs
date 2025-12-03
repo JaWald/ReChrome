@@ -39,6 +39,11 @@ fn main() {
             eprintln!("{:>16}{}\n", "", e);
             exit(1)
         }
+        Err(AppError::CompressionError(e)) => {
+            eprintln!("\n\x1b[31;1mERROR[005] --->\x1b[0m\x1b[1m Jpeg compression has failed\x1b[0m");
+            eprintln!("{:>16}{}\n", "", e);
+            exit(1)
+        }
     }
 }
 
