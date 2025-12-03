@@ -40,11 +40,11 @@ When converting low-res images, you might see a lot of noise. Using a lower baye
 >**Simple conversion, saving as jpeg with 85% quality**\
 >` <correctDir>.\rechrome.exe -i "C:\Users\<user>\Downloads\goldfish.jpg" -p gruvbox -q 85`
 
->**Manual dithering, saving as png** (watercolor effect)\
->` <correctDir>.\rechrome.exe -i "C:\Users\<user>\Downloads\goldfish.jpg" -p gruvbox -d bayer2 -a 128 -f png`
+>**Manual dithering** (watercolor effect)\
+>` <correctDir>.\rechrome.exe -i "C:\Users\<user>\Downloads\goldfish.jpg" -p gruvbox -d bayer2 -a 128`
 
->**Test image with all palettes**\
->` <correctDir>.\rechrome.exe -i "C:\Users\<user>\Downloads\goldfish.jpg" -t palette`
+>**Test image with all palettes, saving as png**\
+>` <correctDir>.\rechrome.exe -i "C:\Users\<user>\Downloads\goldfish.jpg" -t palette -f png`
 
 >**Conversion with preview in-terminal** (examples below)\
 >` <correctDir>.\rechrome.exe -i "C:\Users\<user>\Downloads\goldfish.jpg" -p gruvbox -s 22`
