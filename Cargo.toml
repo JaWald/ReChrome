@@ -7,6 +7,7 @@ edition = "2024"
 clap = { version = "4.5.52", features = ["derive"] }
 image = "0.25.9"
 rayon = "1.11.0"
+kiddo = "5.2.2"
 
 [profile.dev]
 opt-level = 1
