@@ -68,6 +68,7 @@ fn run() -> Result<(), AppError> {
 
     // ------------------------------------------ PROCESS -----------------------------------------
     let start_proc = SystemTime::now();
+    //let processed = process_floyd(img.into_rgba8(), config.palette.colors.to_vec(), config.dither, config.ampl);
     let processed = process_image(img.into_rgba8(), config.palette.colors.to_vec(), config.dither, config.ampl);
     let end_proc = SystemTime::now();
     let dur_proc = end_proc.duration_since(start_proc)?;

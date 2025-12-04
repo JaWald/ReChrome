@@ -1,4 +1,4 @@
-use image::{DynamicImage, Rgba, RgbaImage};
+use image::{DynamicImage, RgbImage, Rgba, RgbaImage};
 use turbojpeg;
 use rayon::prelude::*;
 use kiddo::{ImmutableKdTree, SquaredEuclidean};
@@ -30,6 +30,64 @@ pub fn process_image(mut buf: RgbaImage, palette: Vec<[f32; 3]>, dither: Dither,
 
         *pix = Rgba([color[0] as u8, color[1] as u8, color[2] as u8, pix[3]]);
     });
+    DynamicImage::ImageRgba8(buf)
+}
+
+pub fn process_floyd(mut buf: RgbaImage, palette: Vec<[f32; 3]>, dither: Dither, amplitude: f32) -> DynamicImage {
+    let pal :&[[f32; 3]] = &[[0.0, 0.0, 0.0], [64.0, 64.0, 64.0], [128.0, 128.0, 128.0], [192.0, 192.0, 192.0], [255.0, 255.0, 255.0]];
+    let tree: ImmutableKdTree<f32, 3> = ImmutableKdTree::new_from_slice(&*palette);
+
+    let height = buf.height();
+    let width = buf.width() * 4;
+    let mut image = buf.to_vec().into_iter().map(|color| color as f32).collect::<Vec<f32>>();
+
+    for y in 0..height {
+        for x in (0..width).step_by(4) {
+            let index = (y * width + x) as usize;
+
+            let r_old = image[index + 0];
+            let g_old = image[index + 1];
+            let b_old = image[index + 2];
+            let a_old = image[index + 3];
+
+            let r_clamped = r_old.clamp(0.0, 255.0);
+            let g_clamped = g_old.clamp(0.0, 255.0);
+            let b_clamped = b_old.clamp(0.0, 255.0);
+
+            let nearest = tree.nearest_one::<SquaredEuclidean>(&[r_old, g_old, b_old]);
+            let color = palette[nearest.item as usize];
+            let diff = [
+                r_old - color[0],
+                g_old - color[1],
+                b_old - color[2]
+            ];
+            buf.put_pixel(x / 4, y, Rgba([color[0] as u8, color[1] as u8, color[2] as u8, a_old as u8]));
+            // right
+            if x < width - 4 {
+                image[(y * width + (x + 4) + 0) as usize] += diff[0] * 7f32/16f32 * 0.95;
+                image[(y * width + (x + 4) + 1) as usize] += diff[1] * 7f32/16f32 * 0.95;
+                image[(y * width + (x + 4) + 2) as usize] += diff[2] * 7f32/16f32 * 0.95;
+            }
+            if y < height - 1 {
+                // down middle
+                image[((y + 1) * width + x + 0) as usize] += diff[0] * 5f32/16f32 * 0.95;
+                image[((y + 1) * width + x + 1) as usize] += diff[1] * 5f32/16f32 * 0.95;
+                image[((y + 1) * width + x + 2) as usize] += diff[2] * 5f32/16f32 * 0.95;
+                // down left
+                if x > 0 {
+                    image[((y + 1) * width + (x - 4) + 0) as usize] += diff[0] * 3f32/16f32 * 0.95;
+                    image[((y + 1) * width + (x - 4) + 1) as usize] += diff[1] * 3f32/16f32 * 0.95;
+                    image[((y + 1) * width + (x - 4) + 2) as usize] += diff[2] * 3f32/16f32 * 0.95;
+                }
+                // down right
+                if x < width - 4 {
+                    image[((y + 1) * width + (x + 4) + 0) as usize] += diff[0] * 1f32/16f32 * 0.95;
+                    image[((y + 1) * width + (x + 4) + 1) as usize] += diff[1] * 1f32/16f32 * 0.95;
+                    image[((y + 1) * width + (x + 4) + 2) as usize] += diff[2] * 1f32/16f32 * 0.95;
+                }
+            }
+        }
+    }
     DynamicImage::ImageRgba8(buf)
 }
 
