@@ -13,13 +13,20 @@ It loads an image from the specified input path, applies dithering, performs pal
 |<img src="images/showcase_Pal_nord___.jpg" width="300" alt="Nord">|<img src="images/showcase_Pal_paprcol.jpg" width="300" alt="Papercut">|<img src="images/showcase_Pal_solarizd.jpg" width="300" alt="Solarized">|<img src="images/showcase_Pal_synthwve.jpg" width="300" alt="Synthwave">|
 
 ## ℹ️ Arguments
+Mandatory arguments:
+- `-i <INPUT> -p <PALETTE>` OR
+- `-i <INPUT> -t <TEST>`
 ```c++
 Usage: rechrome.exe [OPTIONS] --input <INPUT>
 
 Options:
-  -p, --palette <PALETTE>  Color Palette    [possible values: atomone, catppuccin, darcula, everforest, gruvbox, kanagawa, monokai, nord, papercolor, solarized, synthwave]
-  -d, --dither <DITHER>    Dithering Modes  [default: bayer16] [possible values: raw, bayer2, bayer4, bayer8, bayer16]
-  -a, --ampl <AMPL>        Bayer Amplitude  [default: bayerX * 4, <256] 
+  -p, --palette <PALETTE>  Color Palette    [possible values: 
+                                              > atomone     > catppuccin  > darcula
+                                              > everforest  > gruvbox     > kanagawa
+                                              > monokai     > nord        > papercolor
+                                              > solarized   > synthwave]
+  -d, --dither <DITHER>    Dithering Modes  [default: bayer8] [possible values: raw, bayer2, bayer4, bayer8, bayer16, fs]
+  -a, --ampl <AMPL>        Dither Amplitude [default: bayerX * 4, Fs: 32, MAX: 255] 
                            
   -i, --input <INPUT>      Input file path  
   -o, --output <OUTPUT>    Output file path [default: <input>_<palette>_<dither>.<format>]
@@ -35,7 +42,7 @@ Options:
 ```
 ## 🛠️ Example usage
 In all these examples, ReChrome saves the image to the input directory, appending palette and dithering parameter to the file name.\
-When converting low-res images, you might see a lot of noise. Using a lower bayer amplitude can reduce this effect.\
+When converting low-res images, you might see a lot of noise. Using a lower amplitude reduces noise but also strengthens color banding.\
 Recommended: `-a 64` for 4K and `-a 16` for 1080p
 
 ```c++
