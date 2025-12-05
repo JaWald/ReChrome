@@ -3,7 +3,7 @@ use std::path::PathBuf;
 use clap::{Parser, ValueEnum};
 
 #[derive(Parser, Debug)]
-#[command(version="0.0.1", about, long_about = None)]
+#[command(version="1.2", about, long_about = None)]
 pub struct Args {
     /// Color palette
     #[arg(short, long, value_enum, help = "\x1b[33;1mColor Palette   \x1b[0m")]
