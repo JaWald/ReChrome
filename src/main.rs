@@ -55,7 +55,7 @@ fn run() -> Result<(), AppError> {
 
     // ------------------------------------------- TEST -------------------------------------------
     if config.test != TestType::None {
-        test(&args, &config.test, &config.size)?;
+        test(&args, &config)?;
         return Ok(());
     }
 
@@ -68,6 +68,7 @@ fn run() -> Result<(), AppError> {
 
     // ------------------------------------------ PROCESS -----------------------------------------
     let start_proc = SystemTime::now();
+    //let processed = process_floyd(img.into_rgba8(), config.palette.colors.to_vec(), config.dither, config.ampl);
     let processed = process_image(img.into_rgba8(), config.palette.colors.to_vec(), config.dither, config.ampl);
     let end_proc = SystemTime::now();
     let dur_proc = end_proc.duration_since(start_proc)?;
