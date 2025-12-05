@@ -14,8 +14,8 @@ pub struct Args {
     #[arg(short, long, value_enum, default_value = "bayer8", help = "Dithering Modes ")]
     pub dither: Dither,
 
-    /// Bayer amplitude
-    #[arg(short, long, help = "Bayer Amplitude  [default: bayerX * 4, <256] \n")]
+    /// Dither amplitude
+    #[arg(short, long, help = "Dither Amplitude [default: bayerX * 4, Fs: 32, MAX: 255] \n")]
     pub ampl: Option<u8>,
 
     /// Input  file path
@@ -62,13 +62,14 @@ pub enum Palette {
     Synthwave
 }
 
-#[derive(Debug, Clone, ValueEnum, Copy)]
+#[derive(Debug, Clone, PartialEq, Copy, ValueEnum)]
 pub enum Dither {
     Raw,
     Bayer2,
     Bayer4,
     Bayer8,
-    Bayer16
+    Bayer16,
+    Fs,
 }
 
 #[derive(Debug, Clone, ValueEnum)]

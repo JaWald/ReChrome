@@ -55,7 +55,7 @@ fn run() -> Result<(), AppError> {
 
     // ------------------------------------------- TEST -------------------------------------------
     if config.test != TestType::None {
-        test(&args, &config.test, &config.size)?;
+        test(&args, &config)?;
         return Ok(());
     }
 

@@ -14,7 +14,8 @@ pub fn print_selection(config: &Config, output: &str) {
     match config.dither {
         Dither::Bayer2 | Dither::Bayer4 | Dither::Bayer8 |
         Dither::Bayer16 => println!("   \x1b[33;1mDither:\x1b[0m\x1b[1m   {:?} - {:.0}\x1b[0m", config.dither, config.ampl),
-        Dither::Raw     => println!("   \x1b[33;1mDither:\x1b[0m\x1b[1m   {:?}\x1b[0m", config.dither)
+        Dither::Fs      => println!("   \x1b[33;1mDither:\x1b[0m\x1b[1m   Floyd-Steinberg\x1b[0m"),
+        Dither::Raw     => println!("   \x1b[33;1mDither:\x1b[0m\x1b[1m   {:?} - {:.0}\x1b[0m", config.dither, config.ampl)
     }
     println!("\n   \x1b[32;1mInput:\x1b[0m    {}", config.input);
     println!("   \x1b[33;1mOutput:\x1b[0m   {}", output);

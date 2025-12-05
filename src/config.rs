@@ -46,7 +46,8 @@ pub fn from_args(args: &Args) -> Result<Config, AppError> {
         Bayer2  => 8,
         Bayer4  => 16,
         Bayer8  => 32,
-        Bayer16 => 64
+        Bayer16 => 64,
+        Fs      => 16
     };
     let ampl = args.ampl.unwrap_or_else(|| ideal_ampl) as f32;
 
@@ -82,18 +83,19 @@ pub fn create_output_path(args: &Args, test: &str, palette: &data::Palette, ampl
                 format!("{:.0}", ampl)
             };
             let dither_str = match dither {
-                Raw => "".to_string(),
-                Bayer2 =>  format!("_bayer-2-{}", ampl_str),
-                Bayer4 =>  format!("_bayer-4-{}", ampl_str),
-                Bayer8 =>  format!("_bayer-8-{}", ampl_str),
-                Bayer16 => format!("_bayer16-{}", ampl_str)
+                Raw     => "".to_string(),
+                Bayer2  =>  format!("_bayer-2-{}", ampl_str),
+                Bayer4  =>  format!("_bayer-4-{}", ampl_str),
+                Bayer8  =>  format!("_bayer-8-{}", ampl_str),
+                Bayer16 => format!("_bayer16-{}", ampl_str),
+                Fs      =>  format!("_floSt-{}", ampl_str),
             };
             let format_str = match format {
                 Format::Png => "png".to_string(),
                 Format::Jpeg => "jpeg".to_string(),
             };
             let file = format!(
-                "{}_{}_{}{}.{}",
+                "{}{}_{}{}.{}",
                 input_stem,
                 test,
                 palette.file_name,
