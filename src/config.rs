@@ -84,11 +84,11 @@ pub fn create_output_path(args: &Args, test: &str, palette: &data::Palette, ampl
             };
             let dither_str = match dither {
                 Raw     => "".to_string(),
-                Bayer2  =>  format!("_bayer-2-{}", ampl_str),
-                Bayer4  =>  format!("_bayer-4-{}", ampl_str),
-                Bayer8  =>  format!("_bayer-8-{}", ampl_str),
+                Bayer2  => format!("_bayer-2-{}", ampl_str),
+                Bayer4  => format!("_bayer-4-{}", ampl_str),
+                Bayer8  => format!("_bayer-8-{}", ampl_str),
                 Bayer16 => format!("_bayer16-{}", ampl_str),
-                Fs      =>  format!("_floSt-{}", ampl_str),
+                Fs      => format!("_floydSt-{}", ampl_str),
             };
             let format_str = match format {
                 Format::Png => "png".to_string(),
