@@ -10,7 +10,7 @@ It loads an image from the specified input path, applies dithering, performs pal
 |[Everforest](https://github.com/sainnhe/everforest/blob/master/palette.md)|[Gruvbox](https://github.com/morhetz/gruvbox)|[Kanagawa](https://github.com/rebelot/kanagawa.nvim)|[Monokai](https://github.com/UtkarshVerma/molokai.nvim)|
 |<img src="images/showcase_Pal_everforst.jpg" width="300" alt="Everforest">|<img src="images/showcase_Pal_gruvbox.jpg" width="300" alt="Gruvbox">|<img src="images/showcase_Pal_kanagwa.jpg" width="300" alt="Kanagawa">|<img src="images/showcase_Pal_monokai.jpg" width="300" alt="Monokai">|
 |[Nord](https://www.nordtheme.com/docs/colors-and-palettes)|[PaperColor](https://github.com/NLKNguyen/papercolor-theme)|[Solarized](https://github.com/solarized/xresources)|[Synthwave](https://github.com/robb0wen/synthwave-vscode)|
-|<img src="images/showcase_Pal_nord___.jpg" width="300" alt="Nord">|<img src="images/showcase_Pal_paprcol.jpg" width="300" alt="Papercut">|<img src="images/showcase_Pal_solarizd.jpg" width="300" alt="Solarized">|<img src="images/showcase_Pal_synthwve.jpg" width="300" alt="Synthwave">|
+|<img src="images/showcase_Pal_nord___.jpg" width="300" alt="Nord">|<img src="images/showcase_Pal_paprcol.jpg" width="300" alt="Papercolor">|<img src="images/showcase_Pal_solarizd.jpg" width="300" alt="Solarized">|<img src="images/showcase_Pal_synthwve.jpg" width="300" alt="Synthwave">|
 
 ## ℹ️ Arguments
 Mandatory arguments:
